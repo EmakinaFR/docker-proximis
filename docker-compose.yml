@@ -1,0 +1,40 @@
+application:
+  image: debian:jessie
+  env_file: docker-env
+  volumes:
+    - ~/www/change:/var/www/change
+  tty: true
+
+nginx:
+  build: nginx
+  env_file: docker-env
+  ports:
+    - "80:80"
+  volumes_from:
+    - application
+  links:
+    - php
+
+php:
+  build: php
+  env_file: docker-env
+  ports:
+    - "9000:9000"
+  volumes_from:
+    - application
+  links:
+    - mysql
+    - elasticsearch
+
+mysql:
+  image: mariadb:latest
+  env_file: docker-env
+  ports:
+    - "3306:3306"
+
+elasticsearch:
+  image: elasticsearch:latest
+  env_file: docker-env
+  ports:
+    - "9200:9200"
+    - "9300:9300"
