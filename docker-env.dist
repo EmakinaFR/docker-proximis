@@ -1,0 +1,11 @@
+##### Elasticsearch
+
+##### MySQL
+MYSQL_ROOT_PASSWORD=
+MYSQL_USER=
+MYSQL_PASSWORD=
+MYSQL_DATABASE=
+
+##### Nginx
+
+##### PHP

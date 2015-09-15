@@ -1,4 +1,5 @@
 .git/
 .gitignore
+docker-env.dist
 LICENSE
 README.md
