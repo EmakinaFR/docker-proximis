@@ -1,2 +1,80 @@
-# docker-change
-Environment for a Change application using Docker &amp; Compose
+# Docker for Change
+This repository allows the creation of a Docker environment that meets the requirements for a Change application.
+
+## Architecture
+Here are the environment containers:
+
+* `application`: This is the Change application code container,
+* `nginx`: This is the Nginx server container (in which the application volume is mounted),
+* `php`: This is the PHP-FPM container (in which the application volume is mounted too),
+* `mysql`: This is the MariaDB server container,
+* `elasticsearch`: This is the Elasticsearch container.
+
+```bash
+$ docker-compose ps
+         Name                       Command               State                       Ports
+----------------------------------------------------------------------------------------------------------------
+change_application_1     /bin/bash                        Up
+change_elasticsearch_1   /docker-entrypoint.sh elas ...   Up      0.0.0.0:9200->9200/tcp, 0.0.0.0:9300->9300/tcp
+change_mysql_1           /docker-entrypoint.sh mysqld     Up      0.0.0.0:3306->3306/tcp
+change_nginx_1           nginx -g daemon off;             Up      443/tcp, 0.0.0.0:80->80/tcp
+change_php_1             php-fpm                          Up      0.0.0.0:9000->9000/tcp
+```
+
+## Installation
+This process assumes that [Docker Engine](https://www.docker.com/docker-engine),
+[Docker Machine](https://docs.docker.com/machine/) and [Docker Compose](https://docs.docker.com/compose/) are installed.
+Otherwise, [Docker Toolbox](https://www.docker.com/toolbox) should be installed before proceeding.
+The path to the local shared folder is `~/www/change` by default.
+
+After the installation, the Change application is reachable by using [`http://change.dev/`](http://change.dev/).
+
+### Clone the repository
+```bash
+$ git clone git@github.com:ajardin/docker-change.git
+```
+It's also possible to download this repository as a
+[ZIP archive](https://github.com/ajardin/docker-change/archive/master.zip).
+
+### Define the environment variables
+```bash
+$ cp docker-env.dist docker-env
+$ nano docker-env
+```
+The only mandatory environment variable is: __MYSQL_ROOT_PASSWORD__.
+
+### Create the virtual machine
+```bash
+$ docker-machine create --driver=virtualbox change
+$ eval "$(docker-machine env change)"
+```
+
+### Build the environment
+```bash
+$ docker-compose up -d
+```
+
+### Update the `/etc/hosts` file
+```bash
+$ docker-machine ip change | sudo sh -c 'echo "$(awk {"print $1"})  change.dev" >> /etc/hosts'
+```
+This command add automatically the virtual machine IP address in the `/etc/hosts` file.
+
+### Configuration of the Change project
+This operation can be achieved through the PHP-FPM container.
+```bash
+$ docker exec -it change_php_1 /bin/bash
+```
+Once in the container, the Change documentation explains all the remaining steps.
+
+## Custom configuration
+The path to the local shared folder can be changed by editing the `docker-compose.yml` file.
+
+It's also possible to automatically define Nginx servers and the PHP configuration. When the environment is built:
+
+* `*.conf` files located under the `nginx` directory are copied to `/etc/nginx/conf.d/`,
+* `*.ini` files located under the `php` directory are copied to `/usr/local/etc/php/conf.d/`.
+
+## Extra
+Thanks to __@eko__ for his work on the [Symfony version](https://github.com/eko/docker-symfony).
+This version is heavily inspired from it. :smiley:
