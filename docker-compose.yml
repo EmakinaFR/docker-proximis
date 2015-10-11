@@ -2,7 +2,7 @@ application:
   image: debian:jessie
   env_file: docker-env
   volumes:
-    - ~/www/change:/var/www/change
+    - ~/www:/var/www/html
   tty: true
 
 nginx:
@@ -14,6 +14,7 @@ nginx:
     - application
   links:
     - php
+  tty: true
 
 php:
   build: php
@@ -25,12 +26,14 @@ php:
   links:
     - mysql
     - elasticsearch
+  tty: true
 
 mysql:
   image: mariadb:latest
   env_file: docker-env
   ports:
     - "3306:3306"
+  tty: true
 
 elasticsearch:
   image: elasticsearch:latest
@@ -38,3 +41,4 @@ elasticsearch:
   ports:
     - "9200:9200"
     - "9300:9300"
+  tty: true

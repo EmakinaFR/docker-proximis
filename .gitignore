@@ -1,1 +1,3 @@
 docker-env
+nginx/*.conf
+!nginx/change.conf
