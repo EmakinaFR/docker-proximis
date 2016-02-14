@@ -1,4 +1,4 @@
-# Docker for Proximis
+# Docker for Proximis [![Build Status](https://travis-ci.org/ajardin/docker-proximis.svg?branch=master)](https://travis-ci.org/ajardin/docker-proximis)
 This repository allows the creation of a Docker environment that meets
 [Proximis Omnichannel](http://www.proximis.com/solution/proximis-omnichannel/) requirements.
 
@@ -75,7 +75,3 @@ It's also possible to automatically define Nginx servers and the PHP configurati
 
 * `*.conf` files located under the `nginx` directory are copied to `/etc/nginx/conf.d/`,
 * `*.ini` files located under the `php` directory are copied to `/usr/local/etc/php/conf.d/`.
-
-## Extra
-Thanks to __@eko__ for his work on the [Symfony version](https://github.com/eko/docker-symfony).
-This version is heavily inspired from it. :smiley:
