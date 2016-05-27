@@ -1,17 +1,10 @@
-application:
-  image: debian:jessie
-  env_file: docker-env
-  volumes:
-    - ~/www:/var/www/html
-  tty: true
-
 nginx:
   build: nginx
   env_file: docker-env
   ports:
     - "80:80"
-  volumes_from:
-    - application
+  volumes:
+    - ~/www:/var/www/html
   links:
     - php
   tty: true
@@ -21,8 +14,8 @@ php:
   env_file: docker-env
   ports:
     - "9000:9000"
-  volumes_from:
-    - application
+  volumes:
+    - ~/www:/var/www/html
   links:
     - mysql
     - elasticsearch
@@ -36,7 +29,7 @@ mysql:
   tty: true
 
 elasticsearch:
-  image: elasticsearch:1.7
+  image: elasticsearch:2.3
   env_file: docker-env
   ports:
     - "9200:9200"
