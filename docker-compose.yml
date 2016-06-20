@@ -1,37 +1,35 @@
-nginx:
-  build: nginx
-  env_file: docker-env
-  ports:
-    - "80:80"
-  volumes:
-    - ~/www:/var/www/html
-  links:
-    - php
-  tty: true
+version: '2'
 
-php:
-  build: php
-  env_file: docker-env
-  ports:
-    - "9000:9000"
-  volumes:
-    - ~/www:/var/www/html
-  links:
-    - mysql
-    - elasticsearch
-  tty: true
+services:
+  nginx:
+    build: nginx
+    env_file: docker-env
+    ports:
+      - "80:80"
+    volumes:
+      - ~/www:/var/www/html
+    tty: true
 
-mysql:
-  image: mariadb:latest
-  env_file: docker-env
-  ports:
-    - "3306:3306"
-  tty: true
+  php:
+    build: php
+    env_file: docker-env
+    ports:
+      - "9000:9000"
+    volumes:
+      - ~/www:/var/www/html
+    tty: true
 
-elasticsearch:
-  image: elasticsearch:2.3
-  env_file: docker-env
-  ports:
-    - "9200:9200"
-    - "9300:9300"
-  tty: true
+  mysql:
+    image: mariadb:latest
+    env_file: docker-env
+    ports:
+      - "3306:3306"
+    tty: true
+
+  elasticsearch:
+    image: elasticsearch:2.3
+    env_file: docker-env
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    tty: true

@@ -1,4 +1,4 @@
-FROM php:7-fpm
+FROM php:fpm
 
 MAINTAINER Alexandre JARDIN <aja@emakina.fr>
 
