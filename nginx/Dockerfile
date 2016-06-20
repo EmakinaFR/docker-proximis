@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:stable
 
 MAINTAINER Alexandre JARDIN <aja@emakina.fr>
 
