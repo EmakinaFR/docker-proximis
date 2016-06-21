@@ -26,4 +26,6 @@ RUN apt-get update \
     && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/php-ext-imagick.ini \
     && rm -rf /var/lib/apt/lists/*
 
+ENV CHANGE_INSTANCE_CONFIG_FILENAME=project.local.json
+
 RUN usermod -u 1000 www-data
