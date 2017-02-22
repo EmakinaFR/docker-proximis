@@ -21,8 +21,7 @@ proximis_php_1             php-fpm                          Up      0.0.0.0:9000
 ```
 
 ## Installation
-This process assumes that [Docker Engine](https://www.docker.com/docker-engine),
-[Docker Machine](https://docs.docker.com/machine/) and [Docker Compose](https://docs.docker.com/compose/) are installed.
+This process assumes that depending of your OS, [Docker for Mac](https://www.docker.com/products/docker#/mac), [Docker for Windows](https://www.docker.com/products/docker#/windows) or [Docker for linux](https://www.docker.com/products/docker#/linux) is installed.
 Otherwise, [Docker Toolbox](https://www.docker.com/toolbox) should be installed before proceeding.
 The path to the local shared folder is `~/www` by default.
 
@@ -42,13 +41,20 @@ $ nano docker-env
 ```
 The only mandatory environment variable is: __MYSQL_ROOT_PASSWORD__.
 
-### Create the virtual machine
+### Start the environment
+
+#### With Docker for mac/windows/linux
+```bash
+$ docker-compose start
+```
+#### With Docker Toolbox
+
+##### Create the virtual machine
 ```bash
 $ docker-machine create --driver=virtualbox proximis
 $ eval "$(docker-machine env proximis)"
 ```
-
-### Build the environment
+##### Build the environment
 ```bash
 $ docker-compose up -d
 ```
