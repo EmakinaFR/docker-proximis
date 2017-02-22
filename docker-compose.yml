@@ -27,7 +27,7 @@ services:
     tty: true
 
   elasticsearch:
-    image: elasticsearch:2.3
+    image: elasticsearch:5.2.0
     env_file: docker-env
     ports:
       - "9200:9200"
