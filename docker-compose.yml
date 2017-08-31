@@ -1,4 +1,4 @@
-version: '2'
+version: "3"
 
 services:
   nginx:
@@ -8,15 +8,14 @@ services:
       - "80:80"
     volumes:
       - ~/www:/var/www/html
+      - ~/docker/proximis/nginx:/etc/nginx/conf.d
     tty: true
 
   php:
     build: php
     env_file: docker-env
-    ports:
-      - "9000:9000"
     volumes:
-      - ~/www:/var/www/html
+      - "~/www:/var/www/html:rw,delegated"
     tty: true
 
   mysql:
@@ -32,4 +31,11 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    tty: true
+
+  redis:
+    image: redis:latest
+    env_file: docker-env
+    ports:
+      - "6379:6379"
     tty: true

@@ -29,7 +29,7 @@ After the installation, the Proximis application is reachable by using [`http://
 
 ### Clone the repository
 ```bash
-$ git clone git@github.com:ajardin/docker-proximis.git
+$ git clone git@github.com:EmakinaFR/docker-proximis.git
 ```
 It's also possible to download this repository as a
 [ZIP archive](https://github.com/ajardin/docker-proximis/archive/master.zip).
