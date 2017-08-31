@@ -1,6 +1,6 @@
 # Docker for Proximis [![Build Status](https://travis-ci.org/EmakinaFR/docker-proximis.svg?branch=master)](https://travis-ci.org/EmakinaFR/docker-proximis)
 This repository allows the creation of a Docker environment that meets
-[Proximis Omnichannel](http://www.proximis.com/solution/proximis-omnichannel/) requirements.
+[Proximis Omnichannel](https://www.proximis.com/solution-online/) requirements.
 
 ## Architecture
 Here are the environment containers:
