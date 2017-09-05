@@ -1,4 +1,4 @@
-# Docker for Proximis [![Build Status](https://travis-ci.org/ajardin/docker-proximis.svg?branch=master)](https://travis-ci.org/ajardin/docker-proximis)
+# Docker for Proximis [![Build Status](https://travis-ci.org/EmakinaFR/docker-proximis.svg?branch=master)](https://travis-ci.org/EmakinaFR/docker-proximis)
 This repository allows the creation of a Docker environment that meets
 [Proximis Omnichannel](http://www.proximis.com/solution/proximis-omnichannel/) requirements.
 

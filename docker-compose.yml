@@ -8,7 +8,6 @@ services:
       - "80:80"
     volumes:
       - ~/www:/var/www/html
-      - ~/docker/proximis/nginx:/etc/nginx/conf.d
     tty: true
 
   php:
