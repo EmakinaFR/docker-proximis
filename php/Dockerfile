@@ -28,10 +28,6 @@ RUN apt-get update \
     && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/php-ext-imagick.ini \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pecl install redis \
-    && pecl install xdebug \
-    && docker-php-ext-enable redis xdebug
-
 RUN apt-get update \
     && apt-get install -y \
         curl \
@@ -52,5 +48,9 @@ RUN apt-get update \
         wget \
         zip \
     && rm -r /var/lib/apt/lists/*
+
+RUN pecl install redis \
+    && pecl install xdebug \
+    && docker-php-ext-enable redis xdebug
 
 RUN usermod -u 1000 www-data
