@@ -1,6 +1,8 @@
-FROM php:fpm
+FROM php:7.1-fpm
 
 MAINTAINER Alexandre JARDIN <aja@emakina.fr>
+MAINTAINER Thibault DESMOULINS <tds@emakina.fr>
+MAINTAINER Romain MONTEIL <rmo@emakina.fr>
 
 COPY *.ini /usr/local/etc/php/conf.d/
 
@@ -26,6 +28,29 @@ RUN apt-get update \
     && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/php-ext-imagick.ini \
     && rm -rf /var/lib/apt/lists/*
 
-ENV CHANGE_INSTANCE_CONFIG_FILENAME=project.local.json
+RUN yes | pecl install redis \
+    && yes | pecl install xdebug \
+    && docker-php-ext-enable redis xdebug
+
+RUN apt-get update \
+    && apt-get install -y \
+        curl \
+        dnsutils \
+        git \
+        git-core \
+        jq \
+        moreutils \
+        mysql-client \
+        nano \
+        netcat \
+        net-tools \
+        p7zip-full \
+        procps \
+        telnet \
+        unzip \
+        vim \
+        wget \
+        zip \
+    && rm -r /var/lib/apt/lists/*
 
 RUN usermod -u 1000 www-data
