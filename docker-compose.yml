@@ -38,3 +38,11 @@ services:
     ports:
       - "6379:6379"
     tty: true
+
+  maildev:
+    image: djfarrelly/maildev
+    env_file: docker-env
+    depends_on:
+      - php
+    ports:
+      - "1080:80"

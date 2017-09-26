@@ -5,19 +5,22 @@ This repository allows the creation of a Docker environment that meets
 ## Architecture
 Here are the environment containers:
 
-* `nginx`: This is the Nginx server container (in which the application volume is mounted),
-* `php`: This is the PHP-FPM container (in which the application volume is mounted too),
-* `mysql`: This is the MariaDB server container,
-* `elasticsearch`: This is the Elasticsearch container.
+* `nginx`: [nginx:stable](https://hub.docker.com/_/nginx/) image.
+* `php`: [php:7.1-fpm](https://hub.docker.com/_/php/) images.
+* `mysql`: [mariadb:latest](https://hub.docker.com/_/mariadb/) image.
+* `elasticsearch`: [elasticsearch:5.2.0](https://hub.docker.com/_/elasticsearch/) image.
+* `redis`: [redis:latest](https://hub.docker.com/_/redis/) image.
+* `maildev`: [djfarrelly/maildev:latest](https://hub.docker.com/r/djfarrelly/maildev/) image.
 
 ```bash
 $ docker-compose ps
-          Name                        Command               State                       Ports
-------------------------------------------------------------------------------------------------------------------
-proximis_elasticsearch_1   /docker-entrypoint.sh elas ...   Up      0.0.0.0:9200->9200/tcp, 0.0.0.0:9300->9300/tcp
-proximis_mysql_1           docker-entrypoint.sh mysqld      Up      0.0.0.0:3306->3306/tcp
-proximis_nginx_1           nginx -g daemon off;             Up      443/tcp, 0.0.0.0:80->80/tcp
-proximis_php_1             php-fpm                          Up      0.0.0.0:9000->9000/tcp
+------------------------------------------------------------------------------------------------------------------------
+dockerproximis_elasticsearch_1   /docker-entrypoint.sh elas ...   Up      0.0.0.0:9200->9200/tcp, 0.0.0.0:9300->9300/tcp
+dockerproximis_maildev_1         bin/maildev --web 80 --smtp 25   Up      25/tcp, 0.0.0.0:1080->80/tcp
+dockerproximis_mysql_1           docker-entrypoint.sh mysqld      Up      0.0.0.0:3306->3306/tcp
+dockerproximis_nginx_1           nginx -g daemon off;             Up      443/tcp, 0.0.0.0:80->80/tcp
+dockerproximis_php_1             docker-php-entrypoint php-fpm    Up      9000/tcp
+dockerproximis_redis_1           docker-entrypoint.sh redis ...   Up      0.0.0.0:6379->6379/tcp
 ```
 
 ## Installation
