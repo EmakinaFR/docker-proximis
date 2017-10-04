@@ -1,4 +1,7 @@
 ##### Elasticsearch
+http.host=0.0.0.0
+transport.host=127.0.0.1
+xpack.security.enabled=false
 
 ##### MySQL
 MYSQL_ROOT_PASSWORD=
