@@ -61,4 +61,11 @@ RUN pecl install redis && \
 RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer
 
+# Install Node.js
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
+  apt-get install -y nodejs
+
+# Install Grunt CLI
+RUN npm install -g grunt-cli
+
 RUN usermod -u 1000 www-data
