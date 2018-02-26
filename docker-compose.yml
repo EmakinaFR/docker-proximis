@@ -7,14 +7,15 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ~/www:/var/www/html
+      - ./nginx/log:/var/log/nginx
+      - ~/www:/var/www/html:rw,delegated
     tty: true
 
   php:
     build: php
     env_file: docker-env
     volumes:
-      - "~/www:/var/www/html:rw,delegated"
+      - ~/www:/var/www/html:rw,delegated
     tty: true
 
   mysql:
@@ -23,7 +24,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - "mysql:/var/lib/mysql"
+      - mysql:/var/lib/mysql
     tty: true
 
   elasticsearch:
@@ -32,13 +33,38 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elasticsearch/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
     tty: true
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:5.5.0
+    env_file: docker-env
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:rw
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./nginx/log:/var/log/nginx:ro
+    tty: true
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:5.5.3
+    env_file: docker-env
+    ports:
+      - "5601:5601"
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
 
   redis:
     image: redis:latest
     env_file: docker-env
     ports:
       - "6379:6379"
+    volumes:
+      - redis:/data
     tty: true
 
   maildev:
@@ -51,3 +77,5 @@ services:
 
 volumes: 
   mysql: {}
+  elasticsearch: {}
+  redis: {}
