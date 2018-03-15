@@ -1,3 +1,5 @@
 docker-env
 nginx/*.conf
 !nginx/proximis.conf
+nginx/log/*
+!nginx/log/.gitkeep
