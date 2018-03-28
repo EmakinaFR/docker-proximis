@@ -35,7 +35,7 @@ services:
       - "9200:9200"
       - "9300:9300"
     volumes:
-      - elasticsearch:/usr/share/elasticsearch/data
+      - elasticsearch:/usr/share/elasticsearch/data:rw
       - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./elasticsearch/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
     tty: true
@@ -60,7 +60,7 @@ services:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
 
   redis:
-    image: redis:latest
+    build: redis
     env_file: docker-env
     ports:
       - "6379:6379"

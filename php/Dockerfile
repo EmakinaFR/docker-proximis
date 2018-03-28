@@ -1,8 +1,6 @@
 FROM php:7.1-fpm
 
-MAINTAINER Alexandre JARDIN <aja@emakina.fr>
-MAINTAINER Thibault DESMOULINS <tds@emakina.fr>
-MAINTAINER Romain MONTEIL <rmo@emakina.fr>
+LABEL maintainer="EmakinaFR <team-proximis@emakina.fr>"
 
 COPY *.ini /usr/local/etc/php/conf.d/
 
