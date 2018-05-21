@@ -18,6 +18,9 @@ services:
     volumes:
       - ~/www:/var/www/html:rw,delegated
     tty: true
+    links:
+      - mysql
+      - redis
 
   mysql:
     image: mariadb:latest
