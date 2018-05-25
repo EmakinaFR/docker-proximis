@@ -102,6 +102,6 @@ The path to the local shared folder can be changed by editing the `docker-compos
 
 It's also possible to automatically define Nginx servers, PHP or Redis configuration. When the environment is built:
 
-* `*.conf` files located under the `nginx` directory are copied to `/etc/nginx/conf.d/`,
+* `*.conf` files located under the `nginx/site-available` directory are copied to `/etc/nginx/conf.d/`,
 * `*.ini` files located under the `php` directory are copied to `/usr/local/etc/php/conf.d/`.
 * `redis.conf` file located under the `redis` directory is copied to `/usr/local/etc/redis/`.
