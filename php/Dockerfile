@@ -10,7 +10,7 @@ RUN apt-get update && \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
-        libpng12-dev \
+        libpng-dev \
         libxslt-dev && \
     docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
     docker-php-ext-install gd iconv intl mbstring mcrypt pdo_mysql soap xsl && \
@@ -32,6 +32,7 @@ RUN apt-get update && \
         dnsutils \
         git \
         git-core \
+        gnupg \
         jq \
         mailutils \
         moreutils \

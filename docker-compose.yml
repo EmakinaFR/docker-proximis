@@ -10,6 +10,8 @@ services:
       - ./nginx/site-available:/etc/nginx/conf.d/:ro
       - ./nginx/log:/var/log/nginx
       - ~/www:/var/www/html:rw,delegated
+    depends_on:
+      - php
     tty: true
 
   php:
@@ -17,6 +19,10 @@ services:
     env_file: docker-env
     volumes:
       - ~/www:/var/www/html:rw,delegated
+    depends_on:
+      - mysql
+      - redis
+      - elasticsearch
     tty: true
     links:
       - mysql
@@ -52,6 +58,10 @@ services:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:rw
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
       - ./nginx/log:/var/log/nginx:ro
+    depends_on:
+      - php
+      - elasticsearch
+      - nginx
     tty: true
 
   kibana:
@@ -61,6 +71,8 @@ services:
       - "5601:5601"
     volumes:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    depends_on:
+      - elasticsearch
 
   redis:
     build: redis
