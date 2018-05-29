@@ -32,6 +32,7 @@ RUN apt-get update && \
         dnsutils \
         git \
         git-core \
+        gnupg \
         jq \
         mailutils \
         moreutils \
