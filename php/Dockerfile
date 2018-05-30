@@ -34,6 +34,7 @@ RUN apt-get update && \
         git-core \
         gnupg \
         jq \
+        libzip-dev \
         mailutils \
         moreutils \
         mysql-client \
@@ -51,10 +52,11 @@ RUN apt-get update && \
     rm -r /var/lib/apt/lists/* && \
     perl -pi -e "s/mailhub=mail/mailhub=maildev/" /etc/ssmtp/ssmtp.conf
 
-# Install Redis & Xdebug
+# Install Redis, Xdebug and Zip
 RUN pecl install redis && \
     pecl install xdebug && \
-    docker-php-ext-enable redis xdebug
+    pecl install zip && \
+    docker-php-ext-enable redis xdebug zip
 
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php && \
