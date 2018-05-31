@@ -44,7 +44,6 @@ RUN apt-get update && \
         mcrypt \
         opcache \
         pdo_mysql \
-        redis \
         soap \
         xsl \
         zip && \
@@ -54,9 +53,10 @@ RUN apt-get update && \
     echo "extension=imagick.so" > /usr/local/etc/php/conf.d/php-ext-imagick.ini && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Xdebug
+# Install Xdebug and Redis
 RUN pecl install xdebug && \
-    docker-php-ext-enable xdebug
+    pecl install redis && \
+    docker-php-ext-enable xdebug redis
 
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php && \
