@@ -49,14 +49,13 @@ RUN apt-get update && \
         zip && \
     perl -pi -e "s/mailhub=mail/mailhub=maildev/" /etc/ssmtp/ssmtp.conf && \
     ln -s /usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16/MagickWand-config /usr/bin/ && \
-    yes | pecl install imagick && \
-    echo "extension=imagick.so" > /usr/local/etc/php/conf.d/php-ext-imagick.ini && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Xdebug and Redis
-RUN pecl install xdebug && \
+# Install Imagick, Xdebug and Redis
+RUN pecl install imagick && \
+    pecl install xdebug && \
     pecl install redis && \
-    docker-php-ext-enable xdebug redis
+    docker-php-ext-enable imagick xdebug redis
 
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php && \
