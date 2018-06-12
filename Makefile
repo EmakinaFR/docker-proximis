@@ -12,15 +12,15 @@ build: ## Build the environment
 	$(DOCKER_COMPOSE) build --pull
 
 env: ## Configure the environment variables
-	@if [[ ! -f docker-env ]]; then \
-		cp docker-env.dist docker-env; \
+	@if [[ ! -f .env ]]; then \
+		cp env.dist .env; \
 	fi
-	nano docker-env
+	nano .env
 
 start: ## Start the environment
-	@if [[ ! -f docker-env ]]; then \
-		echo 'The default configuration has been applied because the "docker-env" file was not configured.'; \
-		cp docker-env.dist docker-env; \
+	@if [[ ! -f .env ]]; then \
+		echo 'The default configuration has been applied because the ".env" file was not configured.'; \
+		cp env.dist .env; \
 	fi
 	$(DOCKER_COMPOSE) up -d --remove-orphans --no-recreate
 
@@ -38,6 +38,29 @@ uninstall: ## Uninstall the environment
 	$(DOCKER_COMPOSE) down --volumes --remove-orphans
 
 .PHONY: build env start stop restart install uninstall
+
+##
+## ----------------------------------------------------------------------------
+##   Proximis
+## ----------------------------------------------------------------------------
+##
+
+new-project: ## Install a new project Proximis
+	@read -p "Project : " project && \
+	read -p "Customer : " customer; \
+	./project.sh new $$project $$customer
+
+bootstrap-project: ## Start an existing project Proximis
+	@read -p "Project : " project && \
+	read -p "Customer : " customer; \
+	./project.sh bootstrap $$project $$customer
+
+update-project: ## Update an existing project
+	@read -p "Project : " project && \
+	read -p "Customer : " customer; \
+	./project.sh update $$project $$customer
+
+.PHONY: new-project bootstrap-project update-project
 
 ##
 ## ----------------------------------------------------------------------------
