@@ -1,4 +1,4 @@
-docker-env
+.env
 nginx/site-available/*.conf
 !nginx/site-available/proximis.conf
 nginx/log/*

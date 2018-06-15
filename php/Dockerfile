@@ -29,6 +29,7 @@ RUN apt-get update && \
         net-tools \
         p7zip-full \
         procps \
+        ssh \
         ssmtp \
         telnet \
         unzip \
@@ -60,6 +61,9 @@ RUN pecl install imagick && \
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer
+
+# Use prestissimo to speed up builds
+RUN composer global require hirak/prestissimo --prefer-dist --no-progress --no-suggest --optimize-autoloader --classmap-authoritative  --no-interaction
 
 # Install Node.js
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \

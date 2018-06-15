@@ -3,22 +3,23 @@ version: "3"
 services:
   nginx:
     build: nginx
-    env_file: docker-env
+    env_file: .env
     ports:
       - "80:80"
     volumes:
       - ./nginx/site-available:/etc/nginx/conf.d/:ro
       - ./nginx/log:/var/log/nginx
-      - ~/www:/var/www/html:rw,delegated
+      - ${WEBSITES}:/var/www/html:rw,delegated
     depends_on:
       - php
     tty: true
 
   php:
     build: php
-    env_file: docker-env
+    env_file: .env
     volumes:
-      - ~/www:/var/www/html:rw,delegated
+      - ~/.ssh:/root/.ssh:ro
+      - ${WEBSITES}:/var/www/html:rw,delegated
     depends_on:
       - mysql
       - redis
@@ -30,7 +31,7 @@ services:
 
   mysql:
     image: mariadb:latest
-    env_file: docker-env
+    env_file: .env
     ports:
       - "3306:3306"
     volumes:
@@ -39,7 +40,7 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
-    env_file: docker-env
+    env_file: .env
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -47,11 +48,15 @@ services:
       - elasticsearch:/usr/share/elasticsearch/data:rw
       - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./elasticsearch/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+      - xpack.security.enabled=false
     tty: true
 
   logstash:
     image: docker.elastic.co/logstash/logstash:5.5.0
-    env_file: docker-env
+    env_file: .env
     ports:
       - "5000:5000"
     volumes:
@@ -66,7 +71,7 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:5.5.3
-    env_file: docker-env
+    env_file: .env
     ports:
       - "5601:5601"
     volumes:
@@ -76,7 +81,7 @@ services:
 
   redis:
     build: redis
-    env_file: docker-env
+    env_file: .env
     ports:
       - "6379:6379"
     volumes:
@@ -85,7 +90,7 @@ services:
 
   maildev:
     image: djfarrelly/maildev
-    env_file: docker-env
+    env_file: .env
     depends_on:
       - php
     ports:
