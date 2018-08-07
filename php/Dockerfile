@@ -1,4 +1,4 @@
-FROM php:7.1-fpm
+FROM php:7.2-fpm
 
 LABEL maintainer="EmakinaFR <team-proximis@emakina.fr>"
 
@@ -18,7 +18,6 @@ RUN apt-get update && \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libmagickwand-dev \
-        libmcrypt-dev \
         libpng-dev \
         libxslt-dev \
         mailutils \
@@ -42,7 +41,6 @@ RUN apt-get update && \
         iconv \
         intl \
         mbstring \
-        mcrypt \
         opcache \
         pdo_mysql \
         soap \
@@ -52,11 +50,12 @@ RUN apt-get update && \
     ln -s /usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16/MagickWand-config /usr/bin/ && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Imagick, Xdebug and Redis
+# Install Imagick, Xdebug, Redis and Igbinary
 RUN pecl install imagick && \
     pecl install xdebug && \
     pecl install redis && \
-    docker-php-ext-enable imagick xdebug redis
+    pecl install igbinary && \
+    docker-php-ext-enable imagick xdebug redis igbinary
 
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php && \
