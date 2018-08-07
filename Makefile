@@ -8,7 +8,6 @@ DOCKER_COMPOSE  = docker-compose
 ##
 
 build: ## Build the environment
-	$(DOCKER_COMPOSE) pull --ignore-pull-failures
 	$(DOCKER_COMPOSE) build --pull
 
 env: ## Configure the environment variables
