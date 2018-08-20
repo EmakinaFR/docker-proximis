@@ -92,7 +92,7 @@ It's also possible to automatically define Nginx servers, PHP or Redis configura
 
 Set up your local project with the `project.local.json` file.
  
-You mush set the following variable :
+You must set the following variable :
  - Change/Mail/username
  - Change/Mail/password
  - Change/Mail/fakemail
