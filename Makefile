@@ -21,16 +21,16 @@ start: ## Start the environment
 		echo 'The default configuration has been applied because the ".env" file was not configured.'; \
 		cp env.dist .env; \
 	fi
-	$(DOCKER_COMPOSE) up -d --remove-orphans --no-recreate
+	$(DOCKER_COMPOSE) up -d --remove-orphans
 
 stop: ## Stop the environment
 	$(DOCKER_COMPOSE) stop
 
 restart: ## Restart the environment
-	stop start
+restart: stop start
 
 install: ## Install the environment
-	build start
+install: build start
 
 uninstall: ## Uninstall the environment
 	$(DOCKER_COMPOSE) kill
