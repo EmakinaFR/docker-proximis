@@ -20,6 +20,7 @@ RUN apt-get update && \
         libmagickwand-dev \
         libpng-dev \
         libxslt-dev \
+        libssh2-1-dev \
         mailutils \
         moreutils \
         mysql-client \
@@ -50,12 +51,13 @@ RUN apt-get update && \
     ln -s /usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16/MagickWand-config /usr/bin/ && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Imagick, Xdebug, Redis and Igbinary
+# Install Imagick, Xdebug, Redis, Igbinary and ssh2
 RUN pecl install imagick && \
     pecl install xdebug && \
     pecl install redis && \
     pecl install igbinary && \
-    docker-php-ext-enable imagick xdebug redis igbinary
+    pecl install ssh2-1.1.2 && \
+    docker-php-ext-enable imagick xdebug redis igbinary ssh2
 
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php && \
