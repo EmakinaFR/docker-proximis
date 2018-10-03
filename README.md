@@ -8,7 +8,7 @@ This repository allows the creation of a Docker environment that meets
 Here are the environment containers:
 
 * `nginx`: [nginx:stable](https://hub.docker.com/_/nginx/) image.
-* `php`: [php:7.1-fpm](https://hub.docker.com/_/php/) images.
+* `php`: [php:7.2-fpm](https://hub.docker.com/_/php/) images.
 * `mysql`: [mariadb:latest](https://hub.docker.com/_/mariadb/) image.
 * `elasticsearch`: [elasticsearch:5.5.0](https://www.docker.elastic.co/) image.
 * `kibana`: [kibana:5.5.3](https://www.docker.elastic.co/) image.
