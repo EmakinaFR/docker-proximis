@@ -1,92 +1,17 @@
-version: "3"
+version: "3.4"
 
 services:
-  nginx:
-    build: nginx
+  blackfire:
+    image: blackfire/blackfire
     env_file: .env
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/site-available:/etc/nginx/conf.d/:ro
-      - ./nginx/log:/var/log/nginx
-      - ${WEBSITES}:/var/www/html:rw,delegated
     depends_on:
       - php
-    tty: true
-
-  php:
-    build: php
-    env_file: .env
-    volumes:
-      - ~/.ssh:/root/.ssh:ro
-      - ${WEBSITES}:/var/www/html:rw,delegated
-    depends_on:
-      - mysql
-      - redis
-      - elasticsearch
-    tty: true
-    links:
-      - mysql
-      - redis
-
-  mysql:
-    image: mariadb:latest
-    env_file: .env
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql:/var/lib/mysql
-    tty: true
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
+    build: elasticsearch
     env_file: .env
-    ports:
-      - "9200:9200"
-      - "9300:9300"
     volumes:
-      - elasticsearch:/usr/share/elasticsearch/data:rw
-      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ./elasticsearch/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
-    environment:
-      - http.host=0.0.0.0
-      - transport.host=127.0.0.1
-      - xpack.security.enabled=false
-    tty: true
-
-  logstash:
-    image: docker.elastic.co/logstash/logstash:5.5.0
-    env_file: .env
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:rw
-      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
-      - ./nginx/log:/var/log/nginx:ro
-    depends_on:
-      - php
-      - elasticsearch
-      - nginx
-    tty: true
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:5.5.3
-    env_file: .env
-    ports:
-      - "5601:5601"
-    volumes:
-      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
-    depends_on:
-      - elasticsearch
-
-  redis:
-    build: redis
-    env_file: .env
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis:/data
-    tty: true
+      - elasticsearch:/usr/share/elasticsearch/data
 
   maildev:
     image: djfarrelly/maildev
@@ -94,9 +19,49 @@ services:
     depends_on:
       - php
     ports:
-      - "1080:80"
+      - 1080:80
 
-volumes: 
-  mysql: {}
+  mysql:
+    image: mysql:5.7
+    env_file: .env
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql:/var/lib/mysql
+    tty: true
+
+  nginx:
+    build: nginx
+    env_file: .env
+    ports:
+      - 443:443
+    volumes:
+      - ${DOCKER_MOUNT_POINT}:/var/www/html:rw,delegated
+      # Custom configuration
+      - ./nginx/servers/proximis.conf:/etc/nginx/conf.d/proximis.conf:ro
+    tty: true
+
+  php:
+    build:
+      context: ./php
+      target: ${DOCKER_PHP_IMAGE}
+    env_file: .env
+    volumes:
+      - ${DOCKER_MOUNT_POINT}:/var/www/html:rw,delegated
+      # Custom configuration
+      - ./php/conf.d/custom.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+      # SSH keys
+      - ~/.ssh:/root/.ssh:ro
+    tty: true
+
+  redis:
+    image: redis:3.2-alpine
+    env_file: .env
+    volumes:
+      - redis:/data
+    tty: true
+
+volumes:
   elasticsearch: {}
+  mysql: {}
   redis: {}

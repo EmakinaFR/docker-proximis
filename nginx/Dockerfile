@@ -1,5 +1,12 @@
-FROM nginx:stable
+FROM nginx:1.15-alpine
 
-LABEL maintainer="EmakinaFR <team-proximis@emakina.fr>"
+# Install HTTPS requirements
+RUN \
+    apk add --no-cache --virtual .build-deps \
+        openssl && \
+    mkdir -p /etc/nginx/ssl && \
+    openssl req -subj '/CN=localhost' -days 365 -x509 -newkey rsa:4096 -nodes \
+        -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt && \
+    apk del .build-deps
 
-RUN usermod -u 1000 www-data
+WORKDIR /var/www/html/

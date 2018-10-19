@@ -1,0 +1,11 @@
+{
+  "name": "emakinafr/docker-proximis",
+  "description": "Docker environment that meets Proximis requirements",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alexandre Jardin",
+      "email": "aja@emakina.fr"
+    }
+  ]
+}

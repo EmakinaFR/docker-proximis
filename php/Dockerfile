@@ -1,79 +1,69 @@
-FROM php:7.2-fpm
+FROM php:7.1-fpm-alpine as proximis_php
 
-LABEL maintainer="EmakinaFR <team-proximis@emakina.fr>"
-
-# Install Proximis requirements
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        curl \
-        dnsutils \
+# Install Magento requirements
+RUN \
+    apk add --no-cache --virtual .persistent-deps \
+        freetype-dev \
         git \
-        git-core \
-        graphicsmagick \
-        gnupg \
-        imagemagick \
-        jq \
-        libzip-dev \
-        libicu-dev \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libmagickwand-dev \
+        icu-libs \
+        libjpeg-turbo-dev \
+        libmcrypt-dev \
         libpng-dev \
+        libxml2-dev \
+        libxml2-utils \
         libxslt-dev \
-        libssh2-1-dev \
-        mailutils \
-        moreutils \
-        mysql-client \
-        nano \
-        netcat \
-        net-tools \
-        p7zip-full \
-        procps \
-        ssh \
+        openssh-client \
+        patch \
+        perl \
         ssmtp \
-        telnet \
-        unzip \
-        vim \
-        wget \
-        zip && \
+        yarn && \
+    apk add --no-cache --virtual .build-deps \
+        $PHPIZE_DEPS \
+        icu-dev && \
+    docker-php-ext-configure bcmath && \
     docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
-    docker-php-ext-install \
-        gd \
-        iconv \
+    docker-php-ext-install -j$(nproc) \
+        bcmath \
         intl \
-        mbstring \
+        gd \
+        mcrypt \
         opcache \
         pdo_mysql \
         soap \
         xsl \
         zip && \
+    yes "" | pecl install apcu redis && \
+    docker-php-ext-enable apcu redis && \
     perl -pi -e "s/mailhub=mail/mailhub=maildev/" /etc/ssmtp/ssmtp.conf && \
-    ln -s /usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16/MagickWand-config /usr/bin/ && \
-    rm -rf /var/lib/apt/lists/*
+    perl -pi -e "s|;pm.status_path = /status|pm.status_path = /php_fpm_status|g" /usr/local/etc/php-fpm.d/www.conf && \
+    yarn global add grunt-cli && \
+    apk del .build-deps
 
-# Install Imagick, Xdebug, Redis, Igbinary and ssh2
-RUN pecl install imagick && \
-    pecl install xdebug && \
-    pecl install redis && \
-    pecl install igbinary && \
-    pecl install ssh2-1.1.2 && \
-    docker-php-ext-enable imagick xdebug redis igbinary ssh2
+## Install Composer globally
+ENV COMPOSER_ALLOW_SUPERUSER 1
+RUN \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    composer global require "hirak/prestissimo:dev-master" --no-suggest --optimize-autoloader --classmap-authoritative
 
-# Install Composer globally
-RUN curl -sS https://getcomposer.org/installer | php && \
-    mv composer.phar /usr/local/bin/composer
+# Install custom entrypoint
+COPY entrypoint.sh /usr/local/bin/docker-custom-entrypoint
+RUN chmod 777 /usr/local/bin/docker-custom-entrypoint
+CMD ["php-fpm"]
+ENTRYPOINT ["docker-custom-entrypoint"]
 
-# Use prestissimo to speed up builds
-RUN composer global require hirak/prestissimo --prefer-dist --no-progress --no-suggest --optimize-autoloader --classmap-authoritative  --no-interaction
 
-# Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
-  apt-get install -y nodejs
+# ======================================================================================================================
+FROM proximis_php as proximis_php_blackfire
+RUN \
+    curl -sS https://packages.blackfire.io/binaries/blackfire-php/1.22.0/blackfire-php-alpine_amd64-php-71.so \
+        --output $(php -r "echo ini_get('extension_dir');")/blackfire.so && \
+    docker-php-ext-enable blackfire
+# ======================================================================================================================
 
-# Install Grunt CLI
-RUN npm install -g grunt-cli
-
-# Install custom PHP configuration
-COPY custom.ini /usr/local/etc/php/conf.d/
-
-RUN usermod -u 1000 www-data
+# ======================================================================================================================
+FROM proximis_php as proximis_php_xdebug
+RUN \
+    apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
+    yes "" | pecl install xdebug && \
+    docker-php-ext-enable xdebug
+# ======================================================================================================================
