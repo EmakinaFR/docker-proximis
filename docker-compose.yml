@@ -11,7 +11,7 @@ services:
     build: elasticsearch
     env_file: .env
     volumes:
-      - elasticsearch:/usr/share/elasticsearch/data
+      - elasticsearch:/usr/share/elasticsearch/data:rw
 
   maildev:
     image: djfarrelly/maildev
@@ -35,10 +35,14 @@ services:
     env_file: .env
     ports:
       - 443:443
+      - 80:80
     volumes:
       - ${DOCKER_MOUNT_POINT}:/var/www/html:rw,delegated
       # Custom configuration
-      - ./nginx/servers/proximis.conf:/etc/nginx/conf.d/proximis.conf:ro
+      - ${DOCKER_MOUNT_POINT}/nginx:/etc/nginx/conf.d
+      - ./nginx/proximis.conf:/etc/nginx/conf.d/proximis.conf
+    depends_on:
+      - php
     tty: true
 
   php:
@@ -52,6 +56,10 @@ services:
       - ./php/conf.d/custom.ini:/usr/local/etc/php/conf.d/custom.ini:ro
       # SSH keys
       - ~/.ssh:/root/.ssh:ro
+    depends_on:
+      - mysql
+      - redis
+      - elasticsearch
     tty: true
 
   redis:

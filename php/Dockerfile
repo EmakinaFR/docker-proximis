@@ -1,14 +1,20 @@
-FROM php:7.1-fpm-alpine as proximis_php
+FROM php:7.2-fpm-alpine as proximis_php
 
-# Install Magento requirements
+# Install Proximis requirements
 RUN \
     apk add --no-cache --virtual .persistent-deps \
         freetype-dev \
+        gcc \
         git \
+        graphicsmagick \
+        gnupg \
+        imagemagick-dev \
         icu-libs \
+        libintl \
         libjpeg-turbo-dev \
         libmcrypt-dev \
         libpng-dev \
+        libssh2-dev \
         libxml2-dev \
         libxml2-utils \
         libxslt-dev \
@@ -26,14 +32,15 @@ RUN \
         bcmath \
         intl \
         gd \
-        mcrypt \
+        mbstring \
         opcache \
         pdo_mysql \
         soap \
+        xml \
         xsl \
         zip && \
-    yes "" | pecl install apcu redis && \
-    docker-php-ext-enable apcu redis && \
+    yes "" | pecl install apcu igbinary imagick redis ssh2-1.1.2 && \
+    docker-php-ext-enable apcu igbinary imagick redis ssh2 && \
     perl -pi -e "s/mailhub=mail/mailhub=maildev/" /etc/ssmtp/ssmtp.conf && \
     perl -pi -e "s|;pm.status_path = /status|pm.status_path = /php_fpm_status|g" /usr/local/etc/php-fpm.d/www.conf && \
     yarn global add grunt-cli && \
