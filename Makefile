@@ -9,7 +9,7 @@ export COMPOSE_PROJECT_NAME := proximis
 
 # Create configuration files needed by the environment
 SETUP_ENV := $(shell (test -f $(SELF_DIR).env || cp $(SELF_DIR).env.dist $(SELF_DIR).env))
-SETUP_SERVER := $(shell (test -f $(SELF_DIR)nginx/servers/proximis.conf || cp $(SELF_DIR)nginx/servers/proximis.conf.dist $(SELF_DIR)nginx/servers/proximis.conf))
+SETUP_SERVER := $(shell (test -f $(SELF_DIR)nginx/proximis.conf || cp $(SELF_DIR)nginx/proximis.conf.dist $(SELF_DIR)nginx/proximis.conf))
 
 # Extract environment variables needed by the environment
 export DOCKER_PHP_IMAGE := $(shell grep DOCKER_PHP_IMAGE $(SELF_DIR).env | awk -F '=' '{print $$NF}')
