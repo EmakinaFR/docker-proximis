@@ -1,7 +1,7 @@
 server {
     listen 80;
 
-    server_name server_name.localhost;
+    server_name ~^(?<domain>.+).localhost$;
     root /var/www/html/www;
 
     index index.html index.htm;
@@ -34,7 +34,7 @@ server {
         fastcgi_param  PATH_INFO $fastcgi_path_info;
         fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param  SCRIPT_NAME $fastcgi_script_name;
-        fastcgi_param  CHANGE_CONFIG_NAME agnesb-agnesb-com.local;
-        fastcgi_param  CHANGE_TMP /tmp/omn_agnesb-agnesb-com;
+        fastcgi_param  CHANGE_CONFIG_NAME $domain.local;
+        fastcgi_param  CHANGE_TMP /tmp/omn_$domain;
     }
 }
