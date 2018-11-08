@@ -7,6 +7,7 @@ RUN \
     mkdir -p /etc/nginx/ssl && \
     openssl req -subj '/CN=localhost' -days 365 -x509 -newkey rsa:4096 -nodes \
         -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt && \
-    apk del .build-deps
+    apk del .build-deps && \
+    apk add --no-cache bash
 
 WORKDIR /var/www/html/
