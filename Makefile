@@ -1,6 +1,9 @@
 SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 PHP_SERVICE := docker-compose exec php sh -c
 
+CHANGE := $(PHP_SERVICE) "php bin/change.phar
+YARN := $(PHP_SERVICE) "yarn
+
 # Define a static project name that will be prepended to each service name
 export COMPOSE_PROJECT_NAME := proximis
 
@@ -28,7 +31,7 @@ backup: ## Backup the "mysql" volume
 		busybox sh -c "tar cvf /backup/backup.tar /var/lib/mysql"
 
 build: ## Build the environment
-	docker-compose build
+	docker-compose build --pull
 
 cache: ## Flush cache stored in Redis
 	docker-compose exec redis sh -c "redis-cli -n 1 FLUSHDB"
@@ -59,8 +62,7 @@ restore: ## Restore the "mysql" volume
 		busybox sh -c "tar xvf /backup/backup.tar var/lib/mysql/"
 	docker-compose restart mysql
 
-start: ## Start the environment
-	docker-compose build
+start: build ## Start the environment
 	docker-compose up -d --remove-orphans
 
 stats: ## Print real-time statistics about containers ressources usage
