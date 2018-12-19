@@ -7,5 +7,11 @@
       "name": "Emakina",
       "email": "team-proximis@emakina.fr"
     }
-  ]
+  ],
+  "bin": [
+  	"docker-upgrade"
+  ],
+  "require": {
+    "symfony/filesystem": "^4.1"
+  }
 }

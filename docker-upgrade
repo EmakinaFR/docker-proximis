@@ -1,0 +1,72 @@
+#!/usr/bin/env php
+<?php
+
+require 'vendor/autoload.php';
+
+use Symfony\Component\Filesystem\Filesystem;
+
+const SOURCE_DIRECTORY = 'vendor/emakinafr/docker-proximis';
+const TARGET_DIRECTORY = 'docker';
+
+$filesystem = new Filesystem();
+
+/**
+ * Create the Docker directory at the project root
+ */
+if ($filesystem->exists(TARGET_DIRECTORY) === false) {
+    $filesystem->mkdir(TARGET_DIRECTORY);
+}
+
+/**
+ * Mirror the vendor directory with the directory created at the project root
+ */
+if ($filesystem->exists(SOURCE_DIRECTORY) === true) {
+    $filesystem->mirror(SOURCE_DIRECTORY, TARGET_DIRECTORY, null, ['override' => true]);
+}
+
+/**
+ * Define the default environment variables
+ */
+if ($filesystem->exists(TARGET_DIRECTORY . '/.env') === false) {
+    $filesystem->copy(
+        TARGET_DIRECTORY . '/.env.dist',
+        TARGET_DIRECTORY . '/.env'
+    );
+}
+
+/**
+ * Define the default Nginx configuration
+ */
+if ($filesystem->exists(TARGET_DIRECTORY . '/nginx/servers/proximis.conf') === false) {
+    $filesystem->copy(
+        TARGET_DIRECTORY . '/nginx/servers/proximis.conf.dist',
+        TARGET_DIRECTORY . '/nginx/servers/proximis.conf'
+    );
+}
+
+/**
+ * Copy the default Makefile at the project root
+ */
+if ($filesystem->exists('Makefile') === false) {
+    $filesystem->copy(
+        TARGET_DIRECTORY . '/Makefile.sample',
+        'Makefile'
+    );
+}
+
+fwrite(
+	STDOUT,
+	'
+ Docker Configuration
+
+
+  * Edit the docker/.env file to configure your own settings.
+
+  * Edit the docker/nginx/servers/proximis.conf file to configure your own virtual host.
+
+  * To manage the Docker environment from the project directory:
+    - If you already have a Makefile in your project, copy the content of the docker/Makefile.sample file at the top of it.
+    - If you do not already have a Makefile, the docker/Makefile.sample file will be installed in your project.
+
+  * Run make to display the list of available commands.'
+);
