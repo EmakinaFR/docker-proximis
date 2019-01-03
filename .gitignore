@@ -3,3 +3,4 @@ composer.lock
 /nginx/servers/*
 !/nginx/servers/proximis.conf.dist
 /vendor/
+/.idea
