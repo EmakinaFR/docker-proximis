@@ -95,7 +95,7 @@ ps: ## List all containers managed by the environment
 	$(DOCKER_COMPOSE) ps
 
 stats: ## Print real-time statistics about containers ressources usage
-	docker stats $(docker ps --format={{.Names}})
+	$(DOCKER) stats $(docker ps --format={{.Names}})
 
 ssh: ## Copy all SSH keys from the host to the "php" container
 	$(DOCKER_COMPOSE) exec -T php sh -c "mkdir -p /root/.ssh"

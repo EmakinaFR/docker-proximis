@@ -7,7 +7,7 @@ This repository allows the creation of a Docker environment that meets
 
 Here are the environment containers:
 
-* `elasticsearch`: [elasticsearch:5.5.0](https://www.docker.elastic.co/) image.
+* `elasticsearch`: [elasticsearch:6.6.0](https://www.docker.elastic.co/) image.
 * `maildev`: [djfarrelly/maildev:latest](https://hub.docker.com/r/djfarrelly/maildev/) image.
 * `mysql`: [mariadb:latest](https://hub.docker.com/_/mariadb/) image.
 * `nginx`: [nginx:stable](https://hub.docker.com/_/nginx/) image.
