@@ -1,6 +1,14 @@
 version: "3.4"
 
 services:
+  blackfire:
+    image: blackfire/blackfire
+    env_file: .env
+    depends_on:
+      - php
+    ports:
+      - "8707:8707"
+
   elasticsearch:
     build: elasticsearch
     env_file: .env
@@ -47,7 +55,9 @@ services:
     tty: true
 
   php:
-    build: php
+    build:
+      context: ./php
+      target: ${DOCKER_PHP_IMAGE}
     env_file: .env
     volumes:
       # Projects files
