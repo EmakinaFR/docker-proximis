@@ -12,7 +12,7 @@ build: ## Build the environment
 
 env: ## Configure the environment variables
 	@if [[ ! -f .env ]]; then \
-		cp env.dist .env; \
+		cp .env.dist .env; \
 	fi
 	nano .env
 
@@ -27,10 +27,9 @@ stop: ## Stop the environment
 	$(DOCKER_COMPOSE) stop
 
 restart: ## Restart the environment
-restart: stop start
+	$(DOCKER_COMPOSE) restart
 
-install: ## Install the environment
-install: build start
+install: build start ## Install the environment
 
 uninstall: ## Uninstall the environment
 	$(DOCKER_COMPOSE) kill
@@ -104,9 +103,6 @@ ssh: ## Copy all SSH keys from the host to the "php" container
 	$(DOCKER_COMPOSE) exec -T php sh -c "echo 'eval \$$(ssh-agent) && ssh-add' >> /root/.bashrc"
 
 .PHONY: cache logs logs-full go-apache go-mysql go-php go-nginx go-redis ps stats ssh
-
-
-
 
 .DEFAULT_GOAL := help
 help:
