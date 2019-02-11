@@ -1,5 +1,6 @@
-.git/
-.gitignore
-env.dist
-LICENSE
-README.md
+/.git/
+/.gitignore
+/.idea
+/.env.dist
+/LICENSE
+/README.md

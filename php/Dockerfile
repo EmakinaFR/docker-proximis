@@ -38,6 +38,7 @@ RUN apt-get update && \
         zip && \
     docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
     docker-php-ext-install \
+        bcmath \
         gd \
         iconv \
         intl \
@@ -45,6 +46,7 @@ RUN apt-get update && \
         opcache \
         pdo_mysql \
         soap \
+        xml \
         xsl \
         zip && \
     perl -pi -e "s/mailhub=mail/mailhub=maildev/" /etc/ssmtp/ssmtp.conf && \
@@ -52,19 +54,14 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Imagick, Xdebug, Redis, Igbinary and ssh2
-RUN pecl install imagick && \
-    pecl install xdebug && \
-    pecl install redis && \
-    pecl install igbinary && \
-    pecl install ssh2-1.1.2 && \
-    docker-php-ext-enable imagick xdebug redis igbinary ssh2
+RUN pecl install apcu igbinary imagick redis ssh2-1.1.2 xdebug && \
+    docker-php-ext-enable apcu igbinary imagick redis ssh2 xdebug
 
 # Install Composer globally
-RUN curl -sS https://getcomposer.org/installer | php && \
-    mv composer.phar /usr/local/bin/composer
-
-# Use prestissimo to speed up builds
-RUN composer global require hirak/prestissimo --prefer-dist --no-progress --no-suggest --optimize-autoloader --classmap-authoritative  --no-interaction
+ENV COMPOSER_ALLOW_SUPERUSER 1
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    composer global require "hirak/prestissimo:dev-master" --no-suggest --optimize-autoloader --classmap-authoritative
+ENV PATH "${PATH}:/root/.composer/vendor/bin"
 
 # Install Node.js
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
@@ -72,8 +69,5 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
 
 # Install Grunt CLI
 RUN npm install -g grunt-cli
-
-# Install custom PHP configuration
-COPY custom.ini /usr/local/etc/php/conf.d/
 
 RUN usermod -u 1000 www-data

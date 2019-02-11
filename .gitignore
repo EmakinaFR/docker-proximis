@@ -1,5 +1,5 @@
 .env
-nginx/site-available/*.conf
-!nginx/site-available/proximis.conf
-nginx/log/*
-!nginx/log/.gitkeep
+/nginx/site-available/*.conf
+!/nginx/site-available/proximis.conf
+/nginx/log/*
+!/nginx/log/.gitkeep
