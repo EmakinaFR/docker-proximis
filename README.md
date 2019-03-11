@@ -82,6 +82,15 @@ It's also possible to automatically define Nginx servers, PHP or Redis configura
 * `*.ini` files located under the `php/conf.d` directory are copied to `/usr/local/etc/php/conf.d/`.
 * `redis.conf` file located under the `redis` directory is copied to `/usr/local/etc/redis/`.
 
+### Enable Xdebug or Blackfire
+
+By default this docker is build without Xdebug or Blackfire to maximize performance.
+
+To enable one of them, you mus replace the `DOCKER_PHP_IMAGE` value in your `.env` file with:
+
+* `proximis_php_xdebug` to install Xdebug
+* `proximis_php_blackfire` to install Blackfire. Don't forget to fill in your Blackfire credentials as well.
+
 ## Tips Proximis
 
 ### Set up project
