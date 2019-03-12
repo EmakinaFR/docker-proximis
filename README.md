@@ -86,7 +86,7 @@ It's also possible to automatically define Nginx servers, PHP or Redis configura
 
 By default this docker is build without Xdebug or Blackfire to maximize performance.
 
-To enable one of them, you mus replace the `DOCKER_PHP_IMAGE` value in your `.env` file with:
+To enable one of them, you must replace the `DOCKER_PHP_IMAGE` value in your `.env` file with:
 
 * `proximis_php_xdebug` to install Xdebug
 * `proximis_php_blackfire` to install Blackfire. Don't forget to fill in your Blackfire credentials as well.
