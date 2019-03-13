@@ -7,7 +7,7 @@ This repository allows the creation of a Docker environment that meets
 
 Here are the environment containers:
 
-* `elasticsearch`: [elasticsearch:5.5.0](https://www.docker.elastic.co/) image.
+* `elasticsearch`: [elasticsearch:6.6.0](https://www.docker.elastic.co/) image.
 * `maildev`: [djfarrelly/maildev:latest](https://hub.docker.com/r/djfarrelly/maildev/) image.
 * `mysql`: [mariadb:latest](https://hub.docker.com/_/mariadb/) image.
 * `nginx`: [nginx:stable](https://hub.docker.com/_/nginx/) image.
@@ -81,6 +81,15 @@ It's also possible to automatically define Nginx servers, PHP or Redis configura
 * `*.conf` files located under the `nginx/site-available` directory are copied to `/etc/nginx/conf.d/`,
 * `*.ini` files located under the `php/conf.d` directory are copied to `/usr/local/etc/php/conf.d/`.
 * `redis.conf` file located under the `redis` directory is copied to `/usr/local/etc/redis/`.
+
+### Enable Xdebug or Blackfire
+
+By default this docker is build without Xdebug or Blackfire to maximize performance.
+
+To enable one of them, you must replace the `DOCKER_PHP_IMAGE` value in your `.env` file with:
+
+* `proximis_php_xdebug` to install Xdebug
+* `proximis_php_blackfire` to install Blackfire. Don't forget to fill in your Blackfire credentials as well.
 
 ## Tips Proximis
 
