@@ -1,53 +1,8 @@
 {
   "Change": {
-    "Install": {
-      "webBaseDirectory": "www",
-      "webBaseURLPath": ""
-    },
-    "Storage": {
-      "baseFTP": {
-        "class": "\\Change\\Storage\\Engines\\LocalStorage",
-        "basePath": "App/Storage/FTP"
-      }
-    },
-    "Session": {
-      "SaveHandler": {
-        "type": "SimpleRedis",
-        "options": {
-          "server": {
-            "host": "redis",
-            "port": "6379",
-            "timeout": 5
-          },
-          "ttl": 7200
-        }
-      }
-    },
-    "Mail": {
-      "type": "smtp",
-      "host": "smtp.gmail.com",
-      "port": 465,
-      "auth": true,
-      "connection": "login",
-      "username": "XXXX",
-      "password": "XXXX",
-      "ssl": "ssl",
-      "fakemail": [
-      ]
-    },
     "Application": {
-      "development-mode": true
-    },
-    "Presentation": {
-      "AngularDevMode": true
-    },
-    "Dev": {
-      "Resources": {
-        "UI": true,
-        "UI.common": true,
-        "Theme": true,
-        "Theme.base": true
-      }
+      "development-mode": true,
+      "env": "local"
     },
     "Cache": {
       "block": false,
@@ -56,18 +11,27 @@
         "redis": {
           "server": {
             "host": "redis",
-            "port": "6379"
+            "port": 6379
           }
         }
       }
     },
     "Db": {
+      "cryptKey": "XXX",
       "default": {
         "host": "mysql",
         "user": "root",
         "password": "root",
         "port": 3306,
         "longTransaction": 5
+      }
+    },
+    "Dev": {
+      "Resources": {
+        "UI": true,
+        "UI.common": true,
+        "Theme": true,
+        "Theme.base": true
       }
     },
     "Http": {
@@ -82,16 +46,91 @@
         "Monitoring": true
       }
     },
+    "Install": {
+      "webBaseDirectory": "www",
+      "webBaseURLPath": ""
+    },
+    "Job": {
+      "stuckDelay": "PT1M"
+    },
+    "Mail": {
+      "type": "smtp",
+      "host": "smtp.gmail.com",
+      "port": 465,
+      "auth": true,
+      "connection": "login",
+      "username": "XXXX",
+      "password": "XXXX",
+      "ssl": "ssl",
+      "fakemail": [
+      ]
+    },
     "Logging": {
       "level": "DEBUG"
+    },
+    "Presentation": {
+      "AngularDevMode": true
+    },
+    "Session": {
+      "SaveHandler": {
+        "type": "SimpleRedis",
+        "options": {
+          "server": {
+            "host": "redis",
+            "port": 6379,
+            "timeout": 5
+          },
+          "ttl": 7200
+        }
+      }
+    },
+    "Storage": {
+      "baseFTP": {
+        "class": "\\Change\\Storage\\Engines\\LocalStorage",
+        "basePath": "App/Storage/FTP"
+      }
     }
   },
   "Rbs": {
+    "Datadashboard": {
+      "Redis": {
+        "server": {
+          "host": "redis",
+          "port": 6379
+        }
+      },
+      "enabledDifferential": true,
+      "codeCache": true,
+      "Contacts": [
+        "noreply@example.com"
+      ]
+    },
     "Elasticsearch": {
       "indices": {
-        "documents": {
-          "host": "elasticsearch",
-          "port": 9200
+        "documents": true
+      },
+      "settings": {
+        "replicas": 0,
+        "shards": 1
+      },
+      "server": {
+        "host": "elasticsearch",
+        "port": 9200
+      }
+    },
+    "Mail": {
+      "defaultSender": "noreply@example.com"
+    },
+    "Notification": {
+      "fromEmail": "noreply@example.com"
+    },
+    "Performance": {
+      "HelpDesk": {
+        "enabled": false
+      },
+      "Analytics": {
+        "UA": {
+          "enabled": false
         }
       }
     }

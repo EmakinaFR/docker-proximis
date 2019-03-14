@@ -7,6 +7,7 @@ This repository allows the creation of a Docker environment that meets
 
 Here are the environment containers:
 
+* `blackfire`: [blackfire/blackfire:latest](https://hub.docker.com/r/blackfire/blackfire/) image.
 * `elasticsearch`: [elasticsearch:6.6.0](https://www.docker.elastic.co/) image.
 * `maildev`: [djfarrelly/maildev:latest](https://hub.docker.com/r/djfarrelly/maildev/) image.
 * `mysql`: [mariadb:latest](https://hub.docker.com/_/mariadb/) image.
@@ -51,11 +52,13 @@ $ make install
 
 ```bash
 $ docker-compose ps
-------------------------------------------------------------------------------------------------------------------------
-proximis_elasticsearch_1   /docker-entrypoint.sh elas ...   Up      0.0.0.0:9200->9200/tcp, 0.0.0.0:9300->9300/tcp
+          Name                        Command               State                       Ports
+------------------------------------------------------------------------------------------------------------------
+proximis_blackfire_1       blackfire-agent                  Up      0.0.0.0:8707->8707/tcp
+proximis_elasticsearch_1   /usr/local/bin/docker-entr ...   Up      0.0.0.0:9200->9200/tcp, 0.0.0.0:9300->9300/tcp
 proximis_maildev_1         bin/maildev --web 80 --smtp 25   Up      25/tcp, 0.0.0.0:1080->80/tcp
 proximis_mysql_1           docker-entrypoint.sh mysqld      Up      0.0.0.0:3306->3306/tcp
-proximis_nginx_1           nginx -g daemon off;             Up      443/tcp, 0.0.0.0:80->80/tcp
+proximis_nginx_1           nginx -g daemon off;             Up      0.0.0.0:80->80/tcp
 proximis_php_1             docker-php-entrypoint php-fpm    Up      9000/tcp
 proximis_redis_1           docker-entrypoint.sh redis ...   Up      0.0.0.0:6379->6379/tcp
 ```
@@ -98,9 +101,9 @@ To enable one of them, you must replace the `DOCKER_PHP_IMAGE` value in your `.e
 Set up your local project with the `project.local.json` file.
  
 You must set the following variable :
- - Change/Mail/username
- - Change/Mail/password
- - Change/Mail/fakemail
+ - `Change/Mail/username`
+ - `Change/Mail/password`
+ - `Change/Mail/fakemail`
  
 ### Install project
 
