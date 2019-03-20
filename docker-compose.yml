@@ -1,20 +1,23 @@
-version: "3.4"
+version: "3.7"
 
 services:
   blackfire:
     image: blackfire/blackfire
-    env_file: .env
+    env_file: ${PROJECT_LOCATION}/docker/local/.env
     depends_on:
       - php
-    ports:
-      - "8707:8707"
 
   elasticsearch:
-    build: elasticsearch
-    env_file: .env
+    build:
+      context: ./elasticsearch
+    env_file: ${PROJECT_LOCATION}/docker/local/.env
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - 9200:9200
+      - 9300:9300
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
       - elasticsearch:/usr/share/elasticsearch/data:rw
       - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
@@ -23,33 +26,34 @@ services:
 
   maildev:
     image: djfarrelly/maildev
-    env_file: .env
+    env_file: ${PROJECT_LOCATION}/docker/local/.env
     depends_on:
       - php
     ports:
-      - "1080:80"
+      - 1080:80
 
   mysql:
     image: mariadb:latest
-    env_file: .env
+    env_file: ${PROJECT_LOCATION}/docker/local/.env
     ports:
-      - "3306:3306"
+      - 3306:3306
     volumes:
       - mysql:/var/lib/mysql
     tty: true
 
   nginx:
-    build: nginx
-    env_file: .env
+    build:
+      context: ./nginx
+    env_file: ${PROJECT_LOCATION}/docker/local/.env
     ports:
-      - "80:80"
+      - 443:443
     volumes:
       # Projects files
-      - ${WEBSITES}:/var/www/html:rw,delegated
+      - code_sync:/var/www/html:nocopy
       # Websites configuration
-      - ./nginx/site-available:/etc/nginx/conf.d/:ro
+      - ${PROJECT_LOCATION}/docker/local/nginx.conf:/etc/nginx/conf.d/custom.conf:ro
       # Logs
-      - ./nginx/log:/var/log/nginx
+      - ${PROJECT_LOCATION}/docker/log/nginx:/var/log/nginx
     depends_on:
       - php
     tty: true
@@ -58,14 +62,14 @@ services:
     build:
       context: ./php
       target: ${DOCKER_PHP_IMAGE}
-    env_file: .env
+    env_file: ${PROJECT_LOCATION}/docker/local/.env
     volumes:
       # Projects files
-      - ${WEBSITES}:/var/www/html:rw,delegated
+      - code_sync:/var/www/html:nocopy
       # Custom configuration
       - ./php/conf.d/custom.ini:/usr/local/etc/php/conf.d/custom.ini:ro
       # Proximis composer proxy JSON
-      - ./php/proximis:/usr/local/bin/proximis/:ro
+      - ${PROJECT_LOCATION}/docker/local/composer-proxy.json:/usr/local/bin/composer-proxy.json:ro
       # SSH keys
       - ~/.ssh:/root/.ssh:ro
     depends_on:
@@ -73,20 +77,26 @@ services:
       - redis
       - elasticsearch
     tty: true
-    links:
-      - mysql
-      - redis
 
   redis:
-    build: redis
-    env_file: .env
+    build:
+      context: ./redis
+    env_file: ${PROJECT_LOCATION}/docker/local/.env
     ports:
-      - "6379:6379"
+      - 6379:6379
     volumes:
       - redis:/data
     tty: true
 
+  synchro:
+    build:
+      context: ./synchro
+    container_name: ${COMPOSE_PROJECT_NAME}_synchro
+    volumes:
+      - code_sync:/var/www/html:nocopy
+
 volumes:
+  code_sync: {}
   elasticsearch: {}
   mysql: {}
   redis: {}

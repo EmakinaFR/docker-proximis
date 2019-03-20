@@ -1,8 +1,12 @@
 server {
-    listen 80;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
 
-    server_name proximis.localhost;
-    root /var/www/html/proximis/www;
+    server_name ~^(?<domain>.+).localhost$;
+    root /var/www/html/www;
+
+    ssl_certificate /etc/nginx/ssl/server.crt;
+    ssl_certificate_key /etc/nginx/ssl/server.key;
 
     sendfile off;
 
@@ -21,8 +25,8 @@ server {
         include fastcgi_params;
 
         proxy_buffering off;
-        fastcgi_connect_timeout 60s;
 
+        fastcgi_connect_timeout 60s;
         fastcgi_send_timeout 180s;
         fastcgi_read_timeout 180s;
 
@@ -30,9 +34,11 @@ server {
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
 
         fastcgi_pass php:9000;
+
         fastcgi_param PATH_INFO $fastcgi_path_info;
-        fastcgi_param SCRIPT_NAME $fastcgi_script_name;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param CHANGE_INSTANCE_CONFIG_FILENAME project.local.json;
+        fastcgi_param SCRIPT_NAME $fastcgi_script_name;
+        fastcgi_param CHANGE_CONFIG_NAME $domain.local;
+        fastcgi_param CHANGE_TMP /tmp/omn_$domain;
     }
 }

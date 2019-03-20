@@ -1,43 +1,48 @@
-FROM php:7.3-fpm as proximis_php
+FROM php:7.3-fpm-alpine as proximis_php
 
 LABEL maintainer="EmakinaFR <team-proximis@emakina.fr>"
 
 # Install Proximis requirements
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN \
+    apk add --no-cache \
+        autoconf \
+        automake \
         curl \
-        default-mysql-client \
-        dnsutils \
+        freetype-dev \
+        gcc \
+        g++ \
         git \
-        git-core \
-        graphicsmagick \
-        gnupg \
-        imagemagick \
+        icu-dev \
+        icu-libs \
+        imagemagick-dev \
         jq \
-        libzip-dev \
-        libicu-dev \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libmagickwand-dev \
+        libtool \
+        libjpeg-turbo-dev \
+        libmcrypt-dev \
         libpng-dev \
+        libssh2-dev \
+        libxml2-dev \
+        libxml2-utils \
         libxslt-dev \
-        libssh2-1-dev \
-        mailutils \
-        moreutils \
-        msmtp \
-        nano \
-        netcat \
-        net-tools \
-        p7zip-full \
-        procps \
-        ssh \
-        telnet \
-        unzip \
-        vim \
-        wget \
-        zip && \
-    docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
-    docker-php-ext-install \
+        libwebp-dev \
+        libzip-dev \
+        ncurses \
+        nodejs-npm \
+        make \
+        openssh-client \
+        patch \
+        perl \
+        shadow \
+        ssmtp \
+        yarn && \
+    apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
+    docker-php-ext-configure bcmath && \
+    docker-php-ext-configure gd \
+        --with-freetype-dir=/usr/include/ \
+        --with-jpeg-dir=/usr/include/ \
+        --with-png-dir=/usr/include/ \
+        --with-webp-dir=/usr/include/ && \
+    docker-php-ext-install -j$(nproc) \
         bcmath \
         gd \
         iconv \
@@ -49,52 +54,57 @@ RUN apt-get update && \
         xml \
         xsl \
         zip && \
+    yes "" | pecl install apcu igbinary imagick redis && \
+    docker-php-ext-enable apcu igbinary imagick redis && \
     perl -pi -e "s/mailhub=mail/mailhub=maildev/" /etc/ssmtp/ssmtp.conf && \
-    ln -s /usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16/MagickWand-config /usr/bin/ && \
-    rm -rf /var/lib/apt/lists/*
-
-# Install Apcu, Igbinary, Imagick and Redis
-RUN pecl install apcu igbinary imagick redis && \
-    docker-php-ext-enable apcu igbinary imagick redis
+    perl -pi -e "s|;pm.status_path = /status|pm.status_path = /php_fpm_status|g" /usr/local/etc/php-fpm.d/www.conf && \
+    yarn global add grunt-cli && \
+    apk del .build-deps
 
 # Clone, build and install SSH2 extension from source
-RUN git clone https://git.php.net/repository/pecl/networking/ssh2.git /tmp/ssh2 && \
+RUN \
+    git clone https://git.php.net/repository/pecl/networking/ssh2.git /tmp/ssh2 && \
     cd /tmp/ssh2/ && \
     .travis/build.sh && \
     docker-php-ext-enable ssh2
 
 # Install Composer globally
 ENV COMPOSER_ALLOW_SUPERUSER 1
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+RUN \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     composer global require "hirak/prestissimo:dev-master" --no-suggest --optimize-autoloader --classmap-authoritative
 ENV PATH "${PATH}:/root/.composer/vendor/bin"
 
-# Install Proxy Composer
-RUN wget https://storage.googleapis.com/omnpackages/composerProxy-linux -O /usr/local/bin/composer-proxy && \
+# Install Proximis ComposerProxy
+RUN \
+    wget https://storage.googleapis.com/omnpackages/composerProxy-linux -O /usr/local/bin/composer-proxy && \
     chmod +x /usr/local/bin/composer-proxy
 
-# Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
-    apt-get install -y nodejs
+# Automatically start the SSH agent when a new session is created
+RUN echo 'eval $(ssh-agent) && ssh-add' >> /home/www-data/.profile
 
-# Install Grunt CLI and Yarn
-RUN npm install -g grunt-cli yarn
+RUN \
+    usermod -u 1000 www-data && \
+    groupmod -g 1000 www-data
 
-RUN usermod -u 1000 www-data
+# Install custom entrypoint
+COPY entrypoint.sh /usr/local/bin/docker-custom-entrypoint
+RUN chmod 777 /usr/local/bin/docker-custom-entrypoint
+CMD ["php-fpm"]
+ENTRYPOINT ["docker-custom-entrypoint"]
 
 # ========================================
 FROM proximis_php as proximis_php_blackfire
-RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
-    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$version \
-    && mkdir -p /tmp/blackfire \
-    && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \
-    && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini \
-    && rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
+RUN \
+    curl -sS https://packages.blackfire.io/binaries/blackfire-php/1.27.1/blackfire-php-alpine_amd64-php-73.so \
+        --output $(php -r "echo ini_get('extension_dir');")/blackfire.so && \
+    docker-php-ext-enable blackfire
 # ========================================
 
 # ========================================
 FROM proximis_php as proximis_php_xdebug
-RUN pecl install xdebug && \
+RUN \
+    apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
+    yes "" | pecl install xdebug && \
     docker-php-ext-enable xdebug
 # ========================================

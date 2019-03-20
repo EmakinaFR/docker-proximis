@@ -1,4 +1,4 @@
-FROM redis:latest
+FROM redis:alpine
 
 LABEL maintainer="EmakinaFR <team-proximis@emakina.fr>"
 
