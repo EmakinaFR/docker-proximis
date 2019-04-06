@@ -3,3 +3,5 @@
 !/nginx/site-available/proximis.conf
 /nginx/log/*
 !/nginx/log/.gitkeep
+/php/proximis/*
+!/php/proximis/.gitkeep

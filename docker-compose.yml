@@ -64,6 +64,8 @@ services:
       - ${WEBSITES}:/var/www/html:rw,delegated
       # Custom configuration
       - ./php/conf.d/custom.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+      # Proximis composer proxy JSON
+      - ./php/proximis:/usr/local/bin/proximis/:ro
       # SSH keys
       - ~/.ssh:/root/.ssh:ro
     depends_on:

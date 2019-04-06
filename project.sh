@@ -125,7 +125,7 @@ function install() {
             echo "${info}No install process found.${reset}"
         fi
 
-        if [ "$?" = "0" ]; then
+        if [[ "$?" = "0" ]]; then
             echo "${success}Project $INTEGRATOR / $REMOTE was successfully installed.${reset}"
         else
             echo "${error}Something went wrong. Project installation may have failed.${reset}"

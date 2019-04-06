@@ -63,12 +63,19 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     composer global require "hirak/prestissimo:dev-master" --no-suggest --optimize-autoloader --classmap-authoritative
 ENV PATH "${PATH}:/root/.composer/vendor/bin"
 
+# Install Proxy Composer
+RUN wget https://storage.googleapis.com/omnpackages/composerProxy-linux -O /usr/local/bin/composer-proxy && \
+    chmod +x /usr/local/bin/composer-proxy
+
 # Install Node.js
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
-  apt-get install -y nodejs
+    apt-get install -y nodejs
 
 # Install Grunt CLI
 RUN npm install -g grunt-cli
+
+# Install Yarn
+RUN npm install -g yarn
 
 RUN usermod -u 1000 www-data
 
