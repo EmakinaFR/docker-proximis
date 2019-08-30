@@ -23,14 +23,14 @@ RUN apt-get update && \
         libssh2-1-dev \
         mailutils \
         moreutils \
-        mysql-client \
+        default-mysql-client \
         nano \
         netcat \
         net-tools \
         p7zip-full \
         procps \
         ssh \
-        ssmtp \
+        msmtp \
         telnet \
         unzip \
         vim \
