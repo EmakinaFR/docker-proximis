@@ -12,7 +12,7 @@ Here are the environment containers:
 * `maildev`: [djfarrelly/maildev:latest](https://hub.docker.com/r/djfarrelly/maildev/) image.
 * `mysql`: [mariadb:latest](https://hub.docker.com/_/mariadb/) image.
 * `nginx`: [nginx:stable](https://hub.docker.com/_/nginx/) image.
-* `php`: [php:7.2-fpm](https://hub.docker.com/_/php/) images.
+* `php`: [php:7.3-fpm](https://hub.docker.com/_/php/) images.
 * `redis`: [redis:latest](https://hub.docker.com/_/redis/) image.
 
 ## Installation
