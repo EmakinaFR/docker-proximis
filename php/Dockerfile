@@ -1,4 +1,4 @@
-FROM php:7.2-fpm as proximis_php
+FROM php:7.3-fpm as proximis_php
 
 LABEL maintainer="EmakinaFR <team-proximis@emakina.fr>"
 
@@ -6,6 +6,7 @@ LABEL maintainer="EmakinaFR <team-proximis@emakina.fr>"
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         curl \
+        default-mysql-client \
         dnsutils \
         git \
         git-core \
@@ -23,14 +24,13 @@ RUN apt-get update && \
         libssh2-1-dev \
         mailutils \
         moreutils \
-        default-mysql-client \
+        msmtp \
         nano \
         netcat \
         net-tools \
         p7zip-full \
         procps \
         ssh \
-        msmtp \
         telnet \
         unzip \
         vim \
@@ -53,9 +53,15 @@ RUN apt-get update && \
     ln -s /usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16/MagickWand-config /usr/bin/ && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Apcu, Igbinary, Imagick, Redis and ssh2
-RUN pecl install apcu igbinary imagick redis ssh2-1.1.2 && \
-    docker-php-ext-enable apcu igbinary imagick redis ssh2
+# Install Apcu, Igbinary, Imagick and Redis
+RUN pecl install apcu igbinary imagick redis && \
+    docker-php-ext-enable apcu igbinary imagick redis
+
+# Clone, build and install SSH2 extension from source
+RUN git clone https://git.php.net/repository/pecl/networking/ssh2.git /tmp/ssh2 && \
+    cd /tmp/ssh2/ && \
+    .travis/build.sh && \
+    docker-php-ext-enable ssh2
 
 # Install Composer globally
 ENV COMPOSER_ALLOW_SUPERUSER 1
@@ -71,11 +77,8 @@ RUN wget https://storage.googleapis.com/omnpackages/composerProxy-linux -O /usr/
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
     apt-get install -y nodejs
 
-# Install Grunt CLI
-RUN npm install -g grunt-cli
-
-# Install Yarn
-RUN npm install -g yarn
+# Install Grunt CLI and Yarn
+RUN npm install -g grunt-cli yarn
 
 RUN usermod -u 1000 www-data
 
