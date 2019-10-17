@@ -17,7 +17,7 @@
       }
     },
     "Db": {
-      "cryptKey": "XXX",
+      "cryptKey": "<crypt-key>",
       "default": {
         "host": "mysql",
         "user": "root",
@@ -59,10 +59,11 @@
       "port": 465,
       "auth": true,
       "connection": "login",
-      "username": "XXXX",
-      "password": "XXXX",
+      "username": "<username>",
+      "password": "<password>",
       "ssl": "ssl",
       "fakemail": [
+        "noreply@ewample.com"
       ]
     },
     "Logging": {
@@ -84,11 +85,17 @@
         }
       }
     },
+    "Sms": {
+      "fakeSms": "+33123456789"
+    },
     "Storage": {
       "baseFTP": {
         "class": "\\Change\\Storage\\Engines\\LocalStorage",
         "basePath": "App/Storage/FTP"
       }
+    },
+    "Svi": {
+      "fakeSvi": "+33123456789"
     }
   },
   "Rbs": {
@@ -102,20 +109,20 @@
       "enabledDifferential": true,
       "codeCache": true,
       "Contacts": [
-        "noreply@example.com"
+        "noreply@ewample.com"
       ]
     },
     "Elasticsearch": {
       "indices": {
-        "documents": true
-      },
-      "settings": {
-        "replicas": 0,
-        "shards": 1
+        "documents" : true
       },
       "server": {
         "host": "elasticsearch",
         "port": 9200
+      },
+      "settings": {
+        "replicas": 0,
+        "shards": 1
       }
     },
     "Mail": {

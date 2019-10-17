@@ -1,0 +1,43 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/../../../autoload.php';
+
+use Symfony\Component\Filesystem\Filesystem;
+
+const SOURCE_DIRECTORY = 'vendor/emakinafr/docker-proximis';
+const DOCKER_DIRECTORY = 'docker/local';
+const CONFIG_DIRECTORY = 'App/Config';
+
+$filesystem = new Filesystem();
+
+/**
+ * Create the Docker directory at the project root
+ */
+if ($filesystem->exists(DOCKER_DIRECTORY) === false) {
+    $filesystem->mkdir(DOCKER_DIRECTORY);
+}
+
+/**
+ * Define the default environment variables
+ */
+$filesystem->copy(SOURCE_DIRECTORY . '/.env.dist', DOCKER_DIRECTORY . '/.env');
+
+/**
+ * Copy Nginx configurations
+ */
+$filesystem->copy(SOURCE_DIRECTORY . '/nginx/conf.d/nginx.conf.sample', DOCKER_DIRECTORY . '/nginx.conf');
+
+/**
+ * Copy the default Makefile at the project root
+ */
+ if ($filesystem->exists('Makefile') === false) {
+     $filesystem->copy(SOURCE_DIRECTORY . '/Makefile.sample', 'Makefile');
+ }
+
+/**
+ * Copy the default project.local.json in the project configuration folder
+ */
+if ($filesystem->exists(CONFIG_DIRECTORY . '/project.local.json') === false) {
+    $filesystem->copy(SOURCE_DIRECTORY . '/project.local.json', CONFIG_DIRECTORY . '/project.local.json');
+ }

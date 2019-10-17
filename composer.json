@@ -1,0 +1,21 @@
+{
+  "name": "emakinafr/docker-proximis",
+  "type": "library",
+  "description": "Docker environment that meets Proximis requirements",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Emakina",
+      "email": "team-proximis@emakina.fr",
+      "homepage": "https://www.emakina.fr/",
+      "role": "Maintainer"
+    }
+  ],
+  "require": {
+    "php": "^7.3.0",
+    "symfony/filesystem": "^4.3"
+  },
+  "bin": [
+    "bin/docker-local-install"
+  ]
+}

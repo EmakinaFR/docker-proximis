@@ -3,123 +3,113 @@
 This repository allows the creation of a Docker environment that meets
 [Proximis Omnichannel](https://www.proximis.com/) requirements.
 
-## Architecture
+## Requirements
 
-Here are the environment containers:
-
-* `blackfire`: [blackfire/blackfire:latest](https://hub.docker.com/r/blackfire/blackfire/) image.
-* `elasticsearch`: [elasticsearch:6.6.0](https://www.docker.elastic.co/) image.
-* `maildev`: [djfarrelly/maildev:latest](https://hub.docker.com/r/djfarrelly/maildev/) image.
-* `mysql`: [mariadb:latest](https://hub.docker.com/_/mariadb/) image.
-* `nginx`: [nginx:stable](https://hub.docker.com/_/nginx/) image.
-* `php`: [php:7.3-fpm](https://hub.docker.com/_/php/) images.
-* `redis`: [redis:latest](https://hub.docker.com/_/redis/) image.
+- [Docker](https://www.docker.com/)
+- [Mutagen](https://mutagen.io/)
 
 ## Installation
 
-This process assumes that depending of your OS, [Docker for Mac](https://www.docker.com/products/docker#/mac), [Docker for Windows](https://www.docker.com/products/docker#/windows) or [Docker for linux](https://www.docker.com/products/docker#/linux) is installed.
-Otherwise, [Docker Toolbox](https://www.docker.com/toolbox) should be installed before proceeding.
+This process assumes that [Docker Engine](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/) are correctly installed.
+Otherwise, you should have a look to the [installation documentation](https://docs.docker.com/install/) before proceeding further. 
 
-After the installation, the Proximis application is reachable by using [`http://proximis.localhost/`](http://proximis.localhost/).
+### Before installation
 
-### Clone the repository
+The only dependency required to run the environment is [Mutagen](https://mutagen.io/) which will synchronize your local files with docker's containers for maximize performances.
+See the [installation documentation](https://mutagen.io/documentation/introduction/installation/) to install it on your system.
 
-```bash
-$ git clone git@github.com:EmakinaFR/docker-proximis.git proximis
-```
-
-It's also possible to download this repository as a
-[ZIP archive](https://github.com/EmakinaFR/docker-proximis/archive/master.zip).
-
-### Define the environment variables
+On Mac OS, simply run these following commands:
 
 ```bash
-$ make env
+brew install mutagen-io/mutagen/mutagen
 ```
 
-You must set the following environment variables :
- - __WEBSITES__
- - __INTEGRATOR__
- - __MYSQL_ROOT_PASSWORD__
+If you want that mutagen automatically starts with your system:
+
+```bash
+mutagen daemon register
+```
+
+You can also start it manually:
+
+```bash
+mutagen daemon start
+```
+
+### Add the package to development requirements
+
+This Docker environment is available as a Composer package, and thus, can be retrieved like a PHP dependency. To add the environment as a development requirement, just type the following commands inside your project directory.
+
+```bash
+# Add the package to your development dependencies
+composer require --dev emakinafr/docker-proximis
+
+# Move several configuration files into your project directory
+composer exec docker-local-install
+```
+
+The second command will copy several files in your project so that you can customize the environment without modifying vendor files.
+
+### Nginx servers
+
+A default Nginx configuration is installed at `docker/local/nginx.conf`. You are free to modify it as you want, to configure your own local domain(s) for instance. 
+By default, this configuration use the domain name to retrieve and use the correct configuration file for the `CHANGE_CONFIG_NAME` environment variable.
+For example, if your domain app is `proximis-demo-fr.localhost`, the `CHANGE_CONFIG_NAME` value will be `proximis-demo-fr.local`.
+
 
 ### Start the environment
 
 ```bash
-$ make install
+make env-start
 ```
 
-### Check the containers
+**That's all, you're done!** :rocket: 
 
-```bash
-$ docker-compose ps
-          Name                        Command               State                       Ports
-------------------------------------------------------------------------------------------------------------------
-proximis_blackfire_1       blackfire-agent                  Up      0.0.0.0:8707->8707/tcp
-proximis_elasticsearch_1   /usr/local/bin/docker-entr ...   Up      0.0.0.0:9200->9200/tcp, 0.0.0.0:9300->9300/tcp
-proximis_maildev_1         bin/maildev --web 80 --smtp 25   Up      25/tcp, 0.0.0.0:1080->80/tcp
-proximis_mysql_1           docker-entrypoint.sh mysqld      Up      0.0.0.0:3306->3306/tcp
-proximis_nginx_1           nginx -g daemon off;             Up      0.0.0.0:80->80/tcp
-proximis_php_1             docker-php-entrypoint php-fpm    Up      9000/tcp
-proximis_redis_1           docker-entrypoint.sh redis ...   Up      0.0.0.0:6379->6379/tcp
-```
-
-Note: You will see something slightly different if you do not clone the repository in a environment directory. The container prefix depends on your directory name.
-
-### Configuration of the Proximis project
+## Configuration of the Proximis project
 
 This operation can be achieved through the PHP-FPM container.
 
 ```bash
-$ docker-compose exec php /bin/bash
+make env-php
 ```
 
 Once in the container, the [official documentation](http://doc.omn.proximis.com/) explains all the remaining steps.
 
-## Custom configuration
+## Environment variables
 
-The path to the local shared folder can be changed by editing the variable `WEBSITES` in `.env` file
+Multiple environment variables are described inside the `docker/local/.env` file.
 
-It's also possible to automatically define Nginx servers, PHP or Redis configuration. When the environment is built:
+### DOCKER_PHP_IMAGE
 
-* `*.conf` files located under the `nginx/site-available` directory are copied to `/etc/nginx/conf.d/`,
-* `*.ini` files located under the `php/conf.d` directory are copied to `/usr/local/etc/php/conf.d/`.
-* `redis.conf` file located under the `redis` directory is copied to `/usr/local/etc/redis/`.
+Defines which image will be used for the `php` container. There are three possible values: `proximis_php` (*default*), `proximis_php_blackfire` or `proximis_php_xdebug`.
 
-### Enable Xdebug or Blackfire
+### BLACKFIRE_*
 
-By default this docker is build without Xdebug or Blackfire to maximize performance.
+Defines the credentials needed to locally profile your application. You'll find more details in the [official documentation](https://blackfire.io/docs/integrations/docker).
 
-To enable one of them, you must replace the `DOCKER_PHP_IMAGE` value in your `.env` file with:
+### MYSQL_*
 
-* `proximis_php_xdebug` to install Xdebug
-* `proximis_php_blackfire` to install Blackfire. Don't forget to fill in your Blackfire credentials as well.
+Defines the credentials needed to locally setup MySQL server. You'll find more details in the [official documentation](https://store.docker.com/images/mysql#environment-variables).
 
-## Tips Proximis
+## Makfile
 
-### Set up project
+A [Makefile](https://github.com/EmakinaFR/docker-proximis/blob/master/Makefile) is present in the repository to facilitate the usage of the Docker environment. In order to use it, you have to be in its directory. But as this file is quite useful and since we are often using the same commands all day, it's possible that you have also a `Makefile` in your project.  
 
-Set up your local project with the `project.local.json` file.
- 
-You must set the following variable :
- - `Change/Mail/username`
- - `Change/Mail/password`
- - `Change/Mail/fakemail`
- 
-### Install project
+To avoid having to move to execute the right file, you can include the Makefile located in your environment directory in the Makefile located inside your project directory.
 
-For each command, you will be asked for the name of the project and the name of the client organization
-
-#### Install a new project
-```bash
-$ make new-project
+```
+───────┼───────────────────────────────────────────────────────────────────────
+       │ File: ~/www/myproject/Makefile
+───────┼───────────────────────────────────────────────────────────────────────
+   1   │ # Project specific variables
+   2   │ DOCKER_PATH := ./vendor/emakinafr/docker-proximis
+   3   │ MAKEFILE_DIRECTORY := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+   4   │
+   5   │ # Retrieve the Makefile used to manage the Docker environment
+   6   │ export COMPOSE_FILE := $(DOCKER_PATH)/docker-compose.yml
+   7   │ include $(DOCKER_PATH)/Makefile
+   8   │
+   9   │ [...]
 ```
 
-#### Install an existing project
-```bash
-$ make bootstrap-project
-```
-
-#### Update an existing project
-```bash
-$ make update-project
-```
+With this structure, you can execute the environment targets like `env-start` or `env-php` directly from your project without adding the environment in your repository.

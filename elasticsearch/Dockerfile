@@ -1,3 +1,3 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch:6.6.0
+FROM elasticsearch:6.8.3
 
 LABEL maintainer="EmakinaFR <team-proximis@emakina.fr>"

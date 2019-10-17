@@ -1,7 +1,2 @@
-.env
-/nginx/site-available/*.conf
-!/nginx/site-available/proximis.conf
-/nginx/log/*
-!/nginx/log/.gitkeep
-/php/proximis/*
-!/php/proximis/.gitkeep
+/vendor/
+composer.lock
