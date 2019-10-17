@@ -9,6 +9,11 @@
       "email": "team-proximis@emakina.fr",
       "homepage": "https://www.emakina.fr/",
       "role": "Maintainer"
+    },
+    {
+      "name": "Romain Monteil",
+      "email": "rmo@emakina.fr",
+      "role": "Maintainer"
     }
   ],
   "require": {
