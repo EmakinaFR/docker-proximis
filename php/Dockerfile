@@ -26,9 +26,10 @@ RUN \
         libxslt-dev \
         libwebp-dev \
         libzip-dev \
+        make \
+        msmtp \
         ncurses \
         nodejs-npm \
-        make \
         openssh-client \
         patch \
         perl \
