@@ -55,19 +55,12 @@ RUN \
         xml \
         xsl \
         zip && \
-    yes "" | pecl install apcu igbinary imagick redis && \
-    docker-php-ext-enable apcu igbinary imagick redis && \
+    yes "" | pecl install apcu igbinary imagick redis ssh2-1.2 && \
+    docker-php-ext-enable apcu igbinary imagick redis ssh2 && \
     perl -pi -e "s/mailhub=mail/mailhub=maildev/" /etc/ssmtp/ssmtp.conf && \
     perl -pi -e "s|;pm.status_path = /status|pm.status_path = /php_fpm_status|g" /usr/local/etc/php-fpm.d/www.conf && \
     yarn global add grunt-cli && \
     apk del .build-deps
-
-# Clone, build and install SSH2 extension from source
-RUN \
-    git clone https://git.php.net/repository/pecl/networking/ssh2.git /tmp/ssh2 && \
-    cd /tmp/ssh2/ && \
-    .travis/build.sh && \
-    docker-php-ext-enable ssh2
 
 # Install Composer globally
 ENV COMPOSER_ALLOW_SUPERUSER 1
