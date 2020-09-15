@@ -1,4 +1,4 @@
-FROM php:7.3-fpm-alpine as proximis_php
+FROM php:7.4-fpm-alpine as proximis_php
 
 LABEL maintainer="EmakinaFR <team-proximis@emakina.fr>"
 
