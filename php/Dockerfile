@@ -39,16 +39,14 @@ RUN \
     apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
     docker-php-ext-configure bcmath && \
     docker-php-ext-configure gd \
-        --with-freetype-dir=/usr/include/ \
-        --with-jpeg-dir=/usr/include/ \
-        --with-png-dir=/usr/include/ \
-        --with-webp-dir=/usr/include/ && \
+        --with-freetype \
+        --with-jpeg \
+        --with-webp && \
     docker-php-ext-install -j$(nproc) \
         bcmath \
         gd \
         iconv \
         intl \
-        mbstring \
         opcache \
         pdo_mysql \
         soap \

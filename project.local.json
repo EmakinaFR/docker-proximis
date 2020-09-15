@@ -53,6 +53,14 @@
     "Job": {
       "stuckDelay": "PT1M"
     },
+    "Logger": {
+      "Writer": {
+        "fileByService": true
+      }
+    },
+    "Logging": {
+      "level": "DEBUG"
+    },
     "Mail": {
       "type": "smtp",
       "host": "smtp.gmail.com",
@@ -63,11 +71,8 @@
       "password": "<password>",
       "ssl": "ssl",
       "fakemail": [
-        "noreply@ewample.com"
+        "noreply@example.com"
       ]
-    },
-    "Logging": {
-      "level": "DEBUG"
     },
     "Presentation": {
       "AngularDevMode": true
@@ -109,7 +114,7 @@
       "enabledDifferential": true,
       "codeCache": true,
       "Contacts": [
-        "noreply@ewample.com"
+        "noreply@example.com"
       ]
     },
     "Elasticsearch": {
