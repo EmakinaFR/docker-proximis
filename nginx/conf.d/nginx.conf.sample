@@ -10,6 +10,7 @@ server {
 
     sendfile off;
 
+    client_body_buffer_size 100M;
     client_max_body_size 100M;
 
     location / {
