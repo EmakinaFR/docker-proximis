@@ -63,7 +63,8 @@ RUN \
 # Install Composer globally
 ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=1.10.17 && \
+    composer selfupdate --1 && \
     composer global require "hirak/prestissimo:dev-master" --no-suggest --optimize-autoloader --classmap-authoritative
 ENV PATH "${PATH}:/root/.composer/vendor/bin"
 
