@@ -62,7 +62,7 @@ env-restore: ## Restore the "mysql" volume
 env-start: ## Start the environment
 	@docker-compose up --detach --remove-orphans
 
-	@if [[ "$$(mutagen sync list --label-selector='name==${COMPOSE_PROJECT_NAME}')" =~ "No( synchronization)? sessions found" ]]; then \
+	@if [[ ! "$$(mutagen sync list --label-selector='name==${COMPOSE_PROJECT_NAME}')" =~ "${COMPOSE_PROJECT_NAME}" ]]; then \
 		mutagen sync create \
 			--label=name="${COMPOSE_PROJECT_NAME}" \
 			--default-owner-beta="id:1000" \
