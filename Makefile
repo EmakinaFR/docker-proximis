@@ -41,7 +41,15 @@ env-nginx: ## Open a terminal in the "nginx" container
 	docker-compose exec -u nginx:nginx nginx sh -l
 
 env-php: ## Open a terminal in the "php" container
-	docker-compose exec -u www-data:www-data php sh -l -c "/bin/bash"
+	docker-compose exec -u www-data:www-data php bash -l -c "source ./project.sh use && /bin/bash"
+
+env-phpl: ## Open a terminal in the "php" container and prompt source locale
+	@read -p "Enter locale: " locale; \
+		docker-compose exec -u www-data:www-data php bash -l -c "source ./project.sh use $$locale && /bin/bash"
+
+source: ## Set source with given locale
+	@read -p "Enter locale: " locale; \
+		source ./project.sh use $$locale
 
 env-ps: ## List all containers managed by the environment
 	docker-compose ps
