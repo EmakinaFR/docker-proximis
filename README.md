@@ -91,7 +91,7 @@ Defines the credentials needed to locally profile your application. You'll find 
 
 Defines the credentials needed to locally setup MySQL server. You'll find more details in the [official documentation](https://store.docker.com/images/mysql#environment-variables).
 
-## Makfile
+## Makefile
 
 A [Makefile](https://github.com/EmakinaFR/docker-proximis/blob/master/Makefile) is present in the repository to facilitate the usage of the Docker environment. In order to use it, you have to be in its directory. But as this file is quite useful and since we are often using the same commands all day, it's possible that you have also a `Makefile` in your project.  
 
