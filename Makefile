@@ -82,6 +82,11 @@ env-start: ## Start the environment
     	mutagen sync resume --label-selector='name==${COMPOSE_PROJECT_NAME}'; \
     fi
 
+	@while [[ ! "$$(mutagen sync list --label-selector='name==${COMPOSE_PROJECT_NAME}')" =~ "Status: Watching for changes" ]]; do \
+		echo "Waiting for synchronization to complete..."; \
+		sleep 10; \
+	done
+
 env-stats: ## Print real-time statistics about containers ressources usage
 	docker stats $(docker ps --format={{.Names}})
 
