@@ -29,7 +29,7 @@ RUN \
         make \
         msmtp \
         ncurses \
-        nodejs-npm \
+        npm \
         openssh-client \
         patch \
         perl \
@@ -63,15 +63,8 @@ RUN \
 # Install Composer globally
 ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=1.10.17 && \
-    composer selfupdate --1 && \
-    composer global require "hirak/prestissimo:dev-master" --no-suggest --optimize-autoloader --classmap-authoritative
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 ENV PATH "${PATH}:/root/.composer/vendor/bin"
-
-# Install Proximis ComposerProxy
-RUN \
-    wget https://storage.googleapis.com/omnpackages/composerProxy-linux -O /usr/local/bin/composer-proxy && \
-    chmod +x /usr/local/bin/composer-proxy
 
 # Automatically start the SSH agent when a new session is created
 RUN echo 'eval $(ssh-agent) && ssh-add' >> /home/www-data/.profile
@@ -87,15 +80,22 @@ CMD ["php-fpm"]
 ENTRYPOINT ["docker-custom-entrypoint"]
 
 # ========================================
-FROM proximis_php as proximis_php_blackfire
+FROM ajardin/php:7.4-blackfire as proximis_php_blackfire
+
 RUN \
-    curl -sS https://packages.blackfire.io/binaries/blackfire-php/1.27.1/blackfire-php-alpine_amd64-php-73.so \
-        --output $(php -r "echo ini_get('extension_dir');")/blackfire.so && \
+    version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") && \
+    architecture=$(case $(uname -m) in i386 | i686 | x86) echo "i386" ;; x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) && \
+    curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s "https://blackfire.io/api/v1/releases/probe/php/alpine/${architecture}/${version}" && \
+    mkdir -p /tmp/blackfire && \
+    tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire && \
+    mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get ('extension_dir');")/blackfire.so && \
+    rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz && \
     docker-php-ext-enable blackfire
 # ========================================
 
 # ========================================
 FROM proximis_php as proximis_php_xdebug
+
 RUN \
     apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
     yes "" | pecl install xdebug && \
