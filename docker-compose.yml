@@ -11,9 +11,14 @@ services:
     build:
       context: ./elasticsearch
     env_file: ${PROJECT_LOCATION}/docker/local/.env
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
     ports:
-      - 9200:9200
-      - 9300:9300
+      - "9200:9200"
+      - "9300:9300"
     ulimits:
       memlock:
         soft: -1
@@ -36,7 +41,7 @@ services:
     image: mariadb:latest
     env_file: ${PROJECT_LOCATION}/docker/local/.env
     ports:
-      - 3306:3306
+      - "3306:3306"
     volumes:
       - mysql:/var/lib/mysql
     tty: true
@@ -46,7 +51,7 @@ services:
       context: ./nginx
     env_file: ${PROJECT_LOCATION}/docker/local/.env
     ports:
-      - 443:443
+      - "443:443"
     volumes:
       # Projects files
       - code_sync:/var/www/html:nocopy
@@ -83,7 +88,7 @@ services:
       context: ./redis
     env_file: ${PROJECT_LOCATION}/docker/local/.env
     ports:
-      - 6379:6379
+      - "6379:6379"
     volumes:
       - redis:/data
     tty: true
