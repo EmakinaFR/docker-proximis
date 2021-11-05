@@ -96,6 +96,27 @@ env-stop: ## Stop the environment
 
 .PHONY: env-backup env-build env-cache env-logs env-logs env-mysql env-nginx env-php env-ps env-purge env-restart env-restore env-start env-stats env-stop
 
+##
+## ----------------------------------------------------------------------------
+## Pipelines
+## ----------------------------------------------------------------------------
+##
+
+ci: ## Continuous integration
+	@make phpcsfixer
+	@make phpstan
+
+phpcsfixer: ## Executes the code style analysis on all PHP files
+	./vendor/bin/php-cs-fixer fix --verbose
+
+phpcsfixer-audit: ## Executes the code style analysis in dry-run mode on all PHP files
+	./vendor/bin/php-cs-fixer fix --dry-run --verbose
+
+phpstan: ## Executes a static analysis on all PHP files
+	./vendor/bin/phpstan --memory-limit="-1" analyse
+
+.PHONY: ci phpcsfixer phpcsfixer-audit phpstan
+
 .DEFAULT_GOAL := help
 help:
 	@grep -E '(^[0-9a-zA-Z_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) \
