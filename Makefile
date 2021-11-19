@@ -103,19 +103,30 @@ env-stop: ## Stop the environment
 ##
 
 ci: ## Continuous integration
-	@make phpcsfixer
-	@make phpstan
+	@make phpcsfixer phpstan eslint-fix stylelint-fix
 
-phpcsfixer: ## Executes the code style analysis on all PHP files
+phpcsfixer: ## Execute the code style analysis and fix on all PHP files
 	./vendor/bin/php-cs-fixer fix --verbose
 
-phpcsfixer-audit: ## Executes the code style analysis in dry-run mode on all PHP files
+phpcsfixer-audit: ## Executes the code style analysis in dry-run mode (no fix) on all PHP files
 	./vendor/bin/php-cs-fixer fix --dry-run --verbose
 
-phpstan: ## Executes a static analysis on all PHP files
+phpstan: ## Execute a static analysis on all PHP files
 	./vendor/bin/phpstan --memory-limit="-1" analyse
 
-.PHONY: ci phpcsfixer phpcsfixer-audit phpstan
+eslint: ## Execute the code style analysis on all js files
+	yarn run eslint
+
+eslint-fix: ## Execute the code style analysis and fix on all js files
+	yarn run eslint-fix
+
+stylelint: ## Execute the code style analysis on all scss files
+	yarn run stylelint
+
+stylelint-fix: ## Execute the code style analysis and fix on all scss files
+	yarn run stylelint-fix
+
+.PHONY: ci phpcsfixer phpcsfixer-audit phpstan eslint eslint-fix stylelint stylelint-fix
 
 .DEFAULT_GOAL := help
 help:
