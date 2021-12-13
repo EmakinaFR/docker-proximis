@@ -103,7 +103,10 @@ env-stop: ## Stop the environment
 ##
 
 ci: ## Continuous integration
-	@make phpcsfixer phpstan eslint-fix stylelint-fix
+	@make phpcsfixer-audit phpstan eslint stylelint
+
+ci-fix: ## Continuous integration
+	@make phpcsfixer eslint-fix stylelint-fix
 
 phpcsfixer: ## Execute the code style analysis and fix on all PHP files
 	./vendor/bin/php-cs-fixer fix --verbose
@@ -126,7 +129,7 @@ stylelint: ## Execute the code style analysis on all scss files
 stylelint-fix: ## Execute the code style analysis and fix on all scss files
 	yarn run stylelint-fix
 
-.PHONY: ci phpcsfixer phpcsfixer-audit phpstan eslint eslint-fix stylelint stylelint-fix
+.PHONY: ci ci-fix phpcsfixer phpcsfixer-audit phpstan eslint eslint-fix stylelint stylelint-fix
 
 .DEFAULT_GOAL := help
 help:
