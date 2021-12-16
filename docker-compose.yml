@@ -35,7 +35,7 @@ services:
     depends_on:
       - php
     ports:
-      - 1080:80
+      - "1080:80"
 
   mysql:
     image: mariadb:latest
@@ -73,8 +73,6 @@ services:
       - code_sync:/var/www/html:nocopy
       # Custom configuration
       - ./php/conf.d/custom.ini:/usr/local/etc/php/conf.d/custom.ini:ro
-      # Proximis composer proxy JSON
-      - ${PROJECT_LOCATION}/docker/local/composer-proxy.json:/usr/local/bin/composer-proxy.json:ro
       # SSH keys
       - ~/.ssh:/root/.ssh:ro
     depends_on:
