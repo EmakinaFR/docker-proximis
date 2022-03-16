@@ -45,7 +45,6 @@ RUN \
     docker-php-ext-install -j$(nproc) \
         bcmath \
         gd \
-        iconv \
         intl \
         opcache \
         pdo_mysql \
