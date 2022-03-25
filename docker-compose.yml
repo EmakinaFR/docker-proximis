@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 services:
   blackfire:
@@ -68,13 +68,15 @@ services:
       context: ./php
       target: ${DOCKER_PHP_IMAGE}
     env_file: ${PROJECT_LOCATION}/docker/local/.env
+    environment:
+      - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
     volumes:
       # Projects files
       - code_sync:/var/www/html:nocopy
       # Custom configuration
       - ./php/conf.d/custom.ini:/usr/local/etc/php/conf.d/custom.ini:ro
-      # SSH keys
-      - ~/.ssh:/root/.ssh:ro
+      # SSH socket
+      - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
     depends_on:
       - mysql
       - redis
