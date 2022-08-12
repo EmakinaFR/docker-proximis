@@ -6,35 +6,11 @@ This repository allows the creation of a Docker environment that meets
 ## Requirements
 
 - [Docker](https://www.docker.com/)
-- [Mutagen](https://mutagen.io/)
 
 ## Installation
 
 This process assumes that [Docker Engine](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/) are correctly installed.
-Otherwise, you should have a look to the [installation documentation](https://docs.docker.com/install/) before proceeding further. 
-
-### Before installation
-
-The only dependency required to run the environment is [Mutagen](https://mutagen.io/) which will synchronize your local files with docker's containers for maximize performances.
-See the [installation documentation](https://mutagen.io/documentation/introduction/installation/) to install it on your system.
-
-On Mac OS, simply run these following commands:
-
-```bash
-brew install mutagen-io/mutagen/mutagen
-```
-
-If you want that mutagen automatically starts with your system:
-
-```bash
-mutagen daemon register
-```
-
-You can also start it manually:
-
-```bash
-mutagen daemon start
-```
+Otherwise, you should have a look to the [installation documentation](https://docs.docker.com/install/) before proceeding further.
 
 ### Add the package to development requirements
 
