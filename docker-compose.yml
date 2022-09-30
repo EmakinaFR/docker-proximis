@@ -8,8 +8,7 @@ services:
       - php
 
   elasticsearch:
-    build:
-      context: ./elasticsearch
+    image: elasticsearch:7.13.1
     env_file: ${PROJECT_LOCATION}/docker/local/.env
     environment:
       - http.host=0.0.0.0
