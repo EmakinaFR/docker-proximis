@@ -26,14 +26,6 @@
         "longTransaction": 5
       }
     },
-    "Dev": {
-      "Resources": {
-        "UI": true,
-        "UI.common": true,
-        "Theme": true,
-        "Theme.base": true
-      }
-    },
     "Http": {
       "Web": {
         "Monitoring": true
@@ -53,14 +45,6 @@
     "Job": {
       "stuckDelay": "PT1M"
     },
-    "Logger": {
-      "Writer": {
-        "fileByService": true
-      }
-    },
-    "Logging": {
-      "level": "DEBUG"
-    },
     "Mail": {
       "type": "smtp",
       "host": "smtp.gmail.com",
@@ -73,6 +57,14 @@
       "fakemail": [
         "noreply@example.com"
       ]
+    },
+    "Logger": {
+      "Writer": {
+        "fileByService": true
+      }
+    },
+    "Logging": {
+      "level": "DEBUG"
     },
     "Presentation": {
       "AngularDevMode": true
@@ -103,6 +95,13 @@
       "fakeSvi": "+33123456789"
     }
   },
+  "Proximis": {
+    "Sso": {
+      "Jwt": {
+        "cryptKey": "123456789"
+      }
+    }
+  },
   "Rbs": {
     "Datadashboard": {
       "Redis": {
@@ -116,6 +115,14 @@
       "Contacts": [
         "noreply@example.com"
       ]
+    },
+    "Dev": {
+      "Resources": {
+        "UI": true,
+        "UI.common": true,
+        "Theme": true,
+        "Theme.base": true
+      }
     },
     "Elasticsearch": {
       "indices": {
