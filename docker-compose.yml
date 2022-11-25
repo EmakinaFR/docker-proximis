@@ -29,12 +29,13 @@ services:
     tty: true
 
   maildev:
-    image: djfarrelly/maildev
-    env_file: ${PROJECT_LOCATION}/docker/local/.env
+    image: maildev/maildev
+    environment:
+        MAILDEV_SMTP_PORT: 25
     depends_on:
       - php
     ports:
-      - "1080:80"
+      - 1080:1080
 
   mysql:
     image: mariadb:latest
