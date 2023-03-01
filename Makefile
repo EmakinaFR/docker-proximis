@@ -75,7 +75,7 @@ start: ## Start the environment
 			--label=name="${COMPOSE_PROJECT_NAME}" \
 			--default-owner-beta="id:1000" \
 			--default-group-beta="id:1000" \
-			--sync-mode="two-way-resolved" \
+			--mode="two-way-resolved" \
 			--ignore-vcs --ignore=".idea" \
 			"${PROJECT_LOCATION}" "docker://${COMPOSE_PROJECT_NAME}_synchro/var/www/html/"; \
 	else \
