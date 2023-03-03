@@ -1,4 +1,4 @@
-FROM ajardin/php:7.4 as proximis_php
+FROM ajardin/php:8.1 as proximis_php
 
 RUN apt update && \
     apt upgrade -y && \
@@ -8,7 +8,7 @@ RUN apt update && \
     docker-php-ext-enable igbinary imagick
 
 # ========================================
-FROM ajardin/php:7.4-xdebug as proximis_php_xdebug
+FROM ajardin/php:8.1-xdebug as proximis_php_xdebug
 
 RUN apt update && \
     apt upgrade -y && \
