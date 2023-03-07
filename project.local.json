@@ -17,7 +17,7 @@
       }
     },
     "Db": {
-      "cryptKey": "<crypt-key>",
+      "cryptKey": "a31e5e809da3ea6544925ffe630c5932",
       "default": {
         "host": "mysql",
         "user": "root",
@@ -51,11 +51,11 @@
       "port": 465,
       "auth": true,
       "connection": "login",
-      "username": "<username>",
+      "username": "emkcommerce@gmail.com",
       "password": "<password>",
       "ssl": "ssl",
       "fakemail": [
-        "noreply@example.com"
+        "emkcommerce@gmail.com"
       ]
     },
     "Logger": {
@@ -113,7 +113,7 @@
       "enabledDifferential": true,
       "codeCache": true,
       "Contacts": [
-        "noreply@example.com"
+        "cluster.proximis@emakina.fr"
       ]
     },
     "Dev": {
@@ -138,10 +138,10 @@
       }
     },
     "Mail": {
-      "defaultSender": "noreply@example.com"
+      "defaultSender": "cluster.proximis@emakina.fr"
     },
     "Notification": {
-      "fromEmail": "noreply@example.com"
+      "fromEmail": "cluster.proximis@emakina.fr"
     },
     "Performance": {
       "HelpDesk": {
