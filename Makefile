@@ -56,7 +56,6 @@ ps: ## List all containers managed by the environment
 
 purge: ## Purge all services and associated volumes
 	docker compose down -v
-	mutagen sync terminate --label-selector='name==${COMPOSE_PROJECT_NAME}'
 
 restart: stop start ## Restart the environment
 
@@ -70,29 +69,11 @@ restore: ## Restore the "mysql" volume
 start: ## Start the environment
 	@docker compose up --detach --remove-orphans
 
-	@if [[ ! "$$(mutagen sync list --label-selector='name==${COMPOSE_PROJECT_NAME}')" =~ "${COMPOSE_PROJECT_NAME}" ]]; then \
-		mutagen sync create \
-			--label=name="${COMPOSE_PROJECT_NAME}" \
-			--default-owner-beta="id:1000" \
-			--default-group-beta="id:1000" \
-			--mode="two-way-resolved" \
-			--ignore-vcs --ignore=".idea" \
-			"${PROJECT_LOCATION}" "docker://${COMPOSE_PROJECT_NAME}_synchro/var/www/html/"; \
-	else \
-    	mutagen sync resume --label-selector='name==${COMPOSE_PROJECT_NAME}'; \
-    fi
-
-	@while [[ ! "$$(mutagen sync list --label-selector='name==${COMPOSE_PROJECT_NAME}')" =~ "Status: Watching for changes" ]]; do \
-		echo "Waiting for synchronization to complete..."; \
-		sleep 10; \
-	done
-
 stats: ## Print real-time statistics about containers ressources usage
 	docker stats $(docker ps --format={{.Names}})
 
 stop: ## Stop the environment
 	@docker compose stop
-	@mutagen sync pause --label-selector='name==${COMPOSE_PROJECT_NAME}'
 
 .PHONY: backup build cache logs logs mysql nginx php ps purge restart restore start stats stop
 
